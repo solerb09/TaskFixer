@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { Database } from '@/types/database'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-02-24.acacia',
 })
 
 export async function POST(request: NextRequest) {
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
       .from('users')
       .select('*')
       .eq('id', user.id)
-      .single()
+      .single<Database['public']['Tables']['users']['Row']>()
 
     if (!profile) {
       return NextResponse.json({ error: 'User profile not found' }, { status: 404 })
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
       customerId = customer.id
 
       // Save customer ID to database
-      await supabase
+      await (supabase as any)
         .from('users')
         .update({ stripe_customer_id: customerId })
         .eq('id', user.id)

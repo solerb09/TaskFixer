@@ -27,13 +27,13 @@ export async function checkUsageLimit(userId: string): Promise<UsageCheck> {
     .from('users')
     .select('*')
     .eq('id', userId)
-    .single()
+    .single<Database['public']['Tables']['users']['Row']>()
 
   const { data: usage } = await supabaseAdmin
     .from('usage_tracking')
     .select('*')
     .eq('user_id', userId)
-    .single()
+    .single<Database['public']['Tables']['usage_tracking']['Row']>()
 
   if (!profile || !usage) {
     return {
@@ -144,7 +144,7 @@ export async function checkUsageLimit(userId: string): Promise<UsageCheck> {
 }
 
 export async function incrementPdfCount(userId: string): Promise<void> {
-  const { error } = await supabaseAdmin.rpc('increment_pdf_count', {
+  const { error } = await (supabaseAdmin as any).rpc('increment_pdf_count', {
     p_user_id: userId,
   })
 
@@ -155,7 +155,7 @@ export async function incrementPdfCount(userId: string): Promise<void> {
 }
 
 export async function incrementFileCount(userId: string, count: number = 1): Promise<void> {
-  const { error } = await supabaseAdmin.rpc('increment_file_count', {
+  const { error } = await (supabaseAdmin as any).rpc('increment_file_count', {
     p_user_id: userId,
     p_count: count,
   })
@@ -167,7 +167,7 @@ export async function incrementFileCount(userId: string, count: number = 1): Pro
 }
 
 export async function addWordCount(userId: string, words: number): Promise<void> {
-  const { error } = await supabaseAdmin.rpc('add_word_count', {
+  const { error } = await (supabaseAdmin as any).rpc('add_word_count', {
     p_user_id: userId,
     p_words: words,
   })

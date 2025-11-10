@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { checkUsageLimit, incrementPdfCount } from "@/lib/usage";
+import { Database } from "@/types/database";
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,9 +26,9 @@ export async function POST(req: NextRequest) {
       .from('users')
       .select('subscription_tier')
       .eq('id', user.id)
-      .single();
+      .single<{ subscription_tier: Database['public']['Tables']['users']['Row']['subscription_tier'] }>();
 
-    const isPaid = profile?.subscription_tier === 'educator' || profile?.subscription_tier === 'school';
+    const isPaid = profile ? (profile.subscription_tier === 'educator' || profile.subscription_tier === 'school') : false;
 
     if (!isPaid && usageCheck.usage && usageCheck.usage.pdfCount >= 1) {
       // Free trial user has already downloaded their 1 PDF

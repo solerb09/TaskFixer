@@ -226,6 +226,7 @@ export async function POST(req: NextRequest) {
 
               // Submit tool outputs and continue streaming
               if (toolOutputs.length > 0) {
+                // @ts-expect-error - submitToolOutputs exists but not in SDK types
                 await stream.submitToolOutputs(toolOutputs);
               }
             } catch (error) {

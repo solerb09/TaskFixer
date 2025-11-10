@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import Stripe from 'stripe'
+import { Database } from '@/types/database'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-02-24.acacia',
 })
 
 export async function POST() {
@@ -25,7 +26,7 @@ export async function POST() {
       .from('users')
       .select('stripe_customer_id')
       .eq('id', user.id)
-      .single()
+      .single<{ stripe_customer_id: Database['public']['Tables']['users']['Row']['stripe_customer_id'] }>()
 
     if (profileError || !profile) {
       return NextResponse.json({ error: 'User profile not found' }, { status: 404 })
