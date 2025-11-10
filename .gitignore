@@ -44,3 +44,7 @@ next-env.d.ts
 .mcp.json
 .claude/
 .env.production.backup
+
+# Documentation files (keep local only)
+*.md
+!README.md
