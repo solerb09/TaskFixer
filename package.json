@@ -1,0 +1,43 @@
+{
+  "name": "taskfixerai-chat",
+  "version": "1.0.0",
+  "description": "TaskFixerAI Chat Interface for Lovable Integration",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "create-assistant": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/create-assistant.ts",
+    "update-assistant": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/update-assistant-tools.ts",
+    "list-assistants": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/list-assistants.ts",
+    "delete-assistant": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/delete-assistant.ts"
+  },
+  "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.79.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
+    "lucide-react": "^0.553.0",
+    "next": "^14.1.0",
+    "openai": "^4.28.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
+    "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.17",
+    "dotenv": "^16.4.5",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
