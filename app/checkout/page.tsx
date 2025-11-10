@@ -5,15 +5,24 @@ import { useAuth } from "../contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default function CheckoutPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [plan, setPlan] = useState<string | null>(null);
+  const [interval, setInterval] = useState<"month" | "year" | null>(null);
 
-  const plan = searchParams.get("plan");
-  const interval = searchParams.get("interval") as "month" | "year";
+  // Get params after mount (client-side only)
+  useEffect(() => {
+    const planParam = searchParams.get("plan");
+    const intervalParam = searchParams.get("interval") as "month" | "year";
+    setPlan(planParam);
+    setInterval(intervalParam);
+  }, [searchParams]);
 
   useEffect(() => {
     // Redirect to login if not authenticated

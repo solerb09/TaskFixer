@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+
+export const dynamic = 'force-dynamic';
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState("");
@@ -12,10 +14,16 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [redirect, setRedirect] = useState("/");
   const { signUp } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/";
+
+  // Get redirect param after mount (client-side only)
+  useEffect(() => {
+    const redirectParam = searchParams.get("redirect");
+    if (redirectParam) setRedirect(redirectParam);
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
