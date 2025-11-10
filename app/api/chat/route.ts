@@ -11,53 +11,6 @@ const openai = new OpenAI({
 
 const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID;
 
-// Simple web search function using DuckDuckGo (no API key needed)
-async function performWebSearch(query: string, numResults: number = 5) {
-  try {
-    // Using DuckDuckGo Instant Answer API (free, no auth required)
-    const response = await fetch(
-      `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`
-    );
-    const data = await response.json();
-
-    // Format results
-    const results = [];
-
-    if (data.Abstract) {
-      results.push({
-        title: data.Heading || 'Overview',
-        snippet: data.Abstract,
-        url: data.AbstractURL
-      });
-    }
-
-    if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-      data.RelatedTopics.slice(0, numResults - 1).forEach((topic: any) => {
-        if (topic.Text && topic.FirstURL) {
-          results.push({
-            title: topic.Text.split(' - ')[0],
-            snippet: topic.Text,
-            url: topic.FirstURL
-          });
-        }
-      });
-    }
-
-    return {
-      query,
-      results: results.slice(0, numResults),
-      total: results.length
-    };
-  } catch (error) {
-    console.error('Web search error:', error);
-    return {
-      query,
-      results: [],
-      error: 'Failed to perform web search'
-    };
-  }
-}
-
 export async function POST(req: NextRequest) {
   try {
     // Check authentication
@@ -141,6 +94,7 @@ export async function POST(req: NextRequest) {
       async start(controller) {
         let fullTextContent = '';
         let isControllerClosed = false;
+        let timeoutId: NodeJS.Timeout | null = null;
 
         const safeEnqueue = (data: string) => {
           if (!isControllerClosed) {
@@ -155,6 +109,11 @@ export async function POST(req: NextRequest) {
         const safeClose = () => {
           if (!isControllerClosed) {
             isControllerClosed = true;
+            // Always clear timeout when closing
+            if (timeoutId) {
+              clearTimeout(timeoutId);
+              timeoutId = null;
+            }
             try {
               controller.close();
             } catch (error) {
@@ -164,7 +123,7 @@ export async function POST(req: NextRequest) {
         };
 
         // Timeout protection (60 seconds)
-        const timeoutId = setTimeout(() => {
+        timeoutId = setTimeout(() => {
           if (!isControllerClosed) {
             console.error('Stream timeout after 60 seconds');
             safeEnqueue(`data: ${JSON.stringify({ error: 'Request timed out. Please try again or rephrase your question.' })}\n\n`);
@@ -196,48 +155,7 @@ export async function POST(req: NextRequest) {
             }
           });
 
-          stream.on('toolCallCreated', (toolCall: any) => {
-            if (toolCall.type === 'function') {
-              safeEnqueue(`data: ${JSON.stringify({ status: 'searching' })}\n\n`);
-            }
-          });
-
-          // Handle tool call requirements
-          // @ts-expect-error - requiresAction is a valid event but not in SDK types
-          stream.on('requiresAction', async (event: any) => {
-            try {
-              const toolCalls = event.required_action?.submit_tool_outputs?.tool_calls || [];
-              const toolOutputs = [];
-
-              for (const toolCall of toolCalls) {
-                if (toolCall.function.name === 'web_search') {
-                  const args = JSON.parse(toolCall.function.arguments);
-                  const searchResults = await performWebSearch(
-                    args.query,
-                    args.num_results || 5
-                  );
-
-                  toolOutputs.push({
-                    tool_call_id: toolCall.id,
-                    output: JSON.stringify(searchResults)
-                  });
-                }
-              }
-
-              // Submit tool outputs and continue streaming
-              if (toolOutputs.length > 0) {
-                // @ts-expect-error - submitToolOutputs exists but not in SDK types
-                await stream.submitToolOutputs(toolOutputs);
-              }
-            } catch (error) {
-              console.error('Error handling tool calls:', error);
-            }
-          });
-
           stream.on('end', async () => {
-            // Clear timeout on successful completion
-            clearTimeout(timeoutId);
-
             // Track usage after successful completion
             try {
               if (fullTextContent) {
@@ -259,24 +177,22 @@ export async function POST(req: NextRequest) {
             }
 
             safeEnqueue(`data: [DONE]\n\n`);
-            safeClose();
+            safeClose(); // This will clear the timeout
           });
 
           stream.on('error', (error: any) => {
-            clearTimeout(timeoutId);
             console.error('Stream error:', error);
             safeEnqueue(`data: ${JSON.stringify({ error: error.message || 'Streaming failed' })}\n\n`);
-            safeClose();
+            safeClose(); // This will clear the timeout
           });
 
           // Wait for stream to complete (using done() instead of finalPromise())
           await stream.done();
 
         } catch (error: any) {
-          clearTimeout(timeoutId);
           console.error("Run error:", error);
           safeEnqueue(`data: ${JSON.stringify({ error: error.message || 'Processing failed' })}\n\n`);
-          safeClose();
+          safeClose(); // This will clear the timeout
         }
       }
     });

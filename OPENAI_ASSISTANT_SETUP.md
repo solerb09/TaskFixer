@@ -42,33 +42,24 @@ Update your OpenAI Assistant's system instructions to include clear boundaries a
 
    ## Important Guidelines
 
-   - DO NOT attempt web searches for general knowledge questions
    - DO NOT try to answer questions about current events, weather, sports, etc.
    - ALWAYS redirect users back to your core educational mission
    - Respond quickly with the above message when detecting off-topic questions
+   - Use only your training data and uploaded files - no external searches
    ```
 
-3. **Configure Tools (Optional)**
+3. **Configure Tools**
 
-   If your assistant has the `web_search` function enabled:
-   - Consider removing it if not essential for educational content
-   - OR add instructions to only use web search for educational research, not general queries
+   Your assistant should have:
+   - ✅ **File Search** - Enabled (for analyzing uploaded assignments and documents)
+   - ✅ **Code Interpreter** - Optional (only if needed for data analysis)
+   - ❌ **Web Search** - REMOVED (to keep assistant focused on training data)
 
-   Example tool usage instruction:
-   ```
-   ## Web Search Usage
-
-   Only use the web_search function for:
-   - Finding educational resources
-   - Researching teaching strategies
-   - Looking up pedagogical best practices
-   - Finding examples of educational activities
-
-   DO NOT use web_search for:
-   - Weather, news, or current events
-   - General knowledge questions
-   - Entertainment or sports queries
-   ```
+   **IMPORTANT**: Make sure the `web_search` function is NOT listed in your assistant's tools.
+   The assistant should rely solely on:
+   - Its training data (knowledge cutoff)
+   - Files uploaded by users
+   - Built-in educational expertise
 
 4. **Test the Changes**
 
