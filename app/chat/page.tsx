@@ -1,3 +1,5 @@
+"use client";
+
 import ProtectedRoute from "../components/ProtectedRoute";
 import ChatInterface from "../components/ChatInterface";
 

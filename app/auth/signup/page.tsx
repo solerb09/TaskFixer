@@ -139,7 +139,7 @@ export default function SignupPage() {
           {/* Sign In Link */}
           <p className="text-center text-sm text-gray-400 mt-6">
             Already have an account?{" "}
-            <Link href="/auth/login" className="text-white hover:underline">
+            <Link href={`/auth/login${redirect !== "/" ? `?redirect=${encodeURIComponent(redirect)}` : ""}`} className="text-white hover:underline">
               Sign in
             </Link>
           </p>

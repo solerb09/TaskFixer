@@ -46,13 +46,13 @@ const ComparisonTable = () => {
                 <th className="p-6 text-left">
                   <div className="flex items-center gap-3">
                     <FileText className="w-6 h-6 text-gray-600" />
-                    <span className="font-semibold text-lg">Before</span>
+                    <span className="font-semibold text-lg text-gray-900">Before</span>
                   </div>
                 </th>
                 <th className="p-6 text-left">
                   <div className="flex items-center gap-3">
                     <Lightbulb className="w-6 h-6 text-[#E6B400]" />
-                    <span className="font-semibold text-lg">
+                    <span className="font-semibold text-lg text-gray-900">
                       After (TaskFixerAI Redesign)
                     </span>
                   </div>
@@ -60,7 +60,7 @@ const ComparisonTable = () => {
                 <th className="p-6 text-left">
                   <div className="flex items-center gap-3">
                     <Laptop className="w-6 h-6 text-[#4FC3F7]" />
-                    <span className="font-semibold text-lg">
+                    <span className="font-semibold text-lg text-gray-900">
                       Responsible AI Use
                     </span>
                   </div>
@@ -70,9 +70,9 @@ const ComparisonTable = () => {
             <tbody>
               {comparisons.map((row, index) => (
                 <tr key={index} className="border-b border-gray-200">
-                  <td className="p-6 text-gray-700">{row.before}</td>
-                  <td className="p-6 text-gray-700 bg-yellow-50">{row.after}</td>
-                  <td className="p-6 text-gray-700 bg-blue-50">
+                  <td className="p-6 text-gray-900">{row.before}</td>
+                  <td className="p-6 text-gray-900 bg-yellow-50">{row.after}</td>
+                  <td className="p-6 text-gray-900 bg-blue-50">
                     {row.responsibleAI}
                   </td>
                 </tr>
@@ -91,7 +91,7 @@ const ComparisonTable = () => {
         <div className="text-center mt-8">
           <button
             onClick={scrollToHowItWorks}
-            className="bg-gradient-to-r from-[#4FC3F7] to-[#E6B400] text-white font-bold text-lg px-9 py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
+            className="bg-gradient-to-r from-[#A855F7] via-[#F97316] to-[#FBBF24] text-white font-bold text-lg px-9 py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
           >
             Upload Your Assignment →
           </button>

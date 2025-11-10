@@ -46,8 +46,8 @@ const HowItWorks = () => {
                 <div className="bg-[#E6B400] text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                   {index + 1}
                 </div>
-                <h3 className="font-semibold text-xl mb-3">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
+                <h3 className="font-semibold text-xl mb-3 text-gray-900">{step.title}</h3>
+                <p className="text-gray-800">{step.description}</p>
               </div>
             );
           })}
@@ -70,8 +70,8 @@ const HowItWorks = () => {
 
         <div className="text-center mt-10">
           <Link
-            href="/chat"
-            className="inline-block bg-gradient-to-r from-[#4FC3F7] to-[#E6B400] text-white font-bold text-lg px-9 py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
+            href="/auth/signup?redirect=%2Fchat"
+            className="inline-block bg-gradient-to-r from-[#A855F7] via-[#F97316] to-[#FBBF24] text-white font-bold text-lg px-9 py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
           >
             Try TaskFixerAI Now →
           </Link>

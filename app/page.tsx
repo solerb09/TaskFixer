@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from './contexts/AuthContext';
 import Header from './components/landing/Header';
 import Hero from './components/landing/Hero';
 import ProblemSection from './components/landing/ProblemSection';
@@ -13,6 +18,35 @@ import PricingSection from './components/landing/PricingSection';
 import Footer from './components/landing/Footer';
 
 export default function LandingPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    // If user is already authenticated, redirect to chat
+    if (!loading && user) {
+      router.push('/chat');
+    }
+  }, [user, loading, router]);
+
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-2xl p-3 animate-pulse">
+            <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
+          </div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Only show landing page if user is not authenticated
+  if (user) {
+    return null; // Will redirect via useEffect
+  }
+
   return (
     <div className="min-h-screen">
       <Header />

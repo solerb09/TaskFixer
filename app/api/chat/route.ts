@@ -162,6 +162,15 @@ export async function POST(req: NextRequest) {
           }
         };
 
+        // Timeout protection (60 seconds)
+        const timeoutId = setTimeout(() => {
+          if (!isControllerClosed) {
+            console.error('Stream timeout after 60 seconds');
+            safeEnqueue(`data: ${JSON.stringify({ error: 'Request timed out. Please try again or rephrase your question.' })}\n\n`);
+            safeClose();
+          }
+        }, 60000);
+
         try {
           // Send threadId first
           safeEnqueue(`data: ${JSON.stringify({ threadId: currentThreadId })}\n\n`);
@@ -223,6 +232,9 @@ export async function POST(req: NextRequest) {
           });
 
           stream.on('end', async () => {
+            // Clear timeout on successful completion
+            clearTimeout(timeoutId);
+
             // Track usage after successful completion
             try {
               if (fullTextContent) {
@@ -248,6 +260,7 @@ export async function POST(req: NextRequest) {
           });
 
           stream.on('error', (error: any) => {
+            clearTimeout(timeoutId);
             console.error('Stream error:', error);
             safeEnqueue(`data: ${JSON.stringify({ error: error.message || 'Streaming failed' })}\n\n`);
             safeClose();
@@ -257,6 +270,7 @@ export async function POST(req: NextRequest) {
           await stream.done();
 
         } catch (error: any) {
+          clearTimeout(timeoutId);
           console.error("Run error:", error);
           safeEnqueue(`data: ${JSON.stringify({ error: error.message || 'Processing failed' })}\n\n`);
           safeClose();

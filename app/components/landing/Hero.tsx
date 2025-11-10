@@ -8,41 +8,36 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-[auto] lg:min-h-[70vh] flex items-center pt-0 overflow-visible z-[1]">
-      {/* Gradient Background - Left Side Only */}
-      <div
-        className="absolute inset-0 lg:w-[60%] z-[1]"
-        style={{
-          background: '#8E5AE9',
-        }}
-      />
+    <section className="relative min-h-0 flex items-center pt-0 overflow-hidden z-[1] w-full">
+      {/* Full width background container */}
+      <div className="absolute inset-0 w-full z-[1] bg-[#8E5AE9]" />
 
       {/* Two-Column Grid Layout on Desktop, Single Column on Mobile */}
-      <div className="container mx-auto relative z-[2] px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] gap-8 md:gap-12 items-center">
+      <div className="container mx-auto relative z-[2] px-4 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] gap-4 md:gap-8 items-center">
           {/* Left Column: Logo + Text Content */}
-          <div className="px-6 md:px-10 lg:pl-[60px] mt-[63px] md:mt-[79px] lg:mt-[105px] pb-[60px] flex flex-col h-auto overflow-visible relative z-[2] order-1">
+          <div className="px-6 md:px-10 lg:pl-[60px] mt-[40px] md:mt-[50px] lg:mt-[60px] pb-[40px] md:pb-[50px] flex flex-col h-auto overflow-visible relative z-[2] order-1">
             {/* Logo at top-left */}
             <img
               src="/taskfixer-logo.png"
               alt="TaskFixerAI Logo"
-              className="object-contain w-[180px] md:w-[240px] lg:w-[300px] mb-2 mx-auto"
+              className="object-contain w-[150px] md:w-[200px] lg:w-[250px] mb-2 mx-auto"
               style={{
                 filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2))',
               }}
             />
 
             <p
-              className="text-white/80 mb-4 text-center"
+              className="text-white/80 mb-2 text-center"
               style={{
-                fontSize: '13px',
+                fontSize: '12px',
               }}
             >
               TaskFixerAI™ is a trademarked and copyrighted product.
             </p>
 
             <h1
-              className="font-extrabold text-[28px] md:text-[36px] lg:text-[48px] text-white leading-[1.2] mt-0 mb-3 text-center"
+              className="font-extrabold text-[24px] md:text-[32px] lg:text-[42px] text-white leading-[1.2] mt-0 mb-2 text-center"
               style={{
                 textShadow: '0 1px 1px rgba(0, 0, 0, 0.3)',
               }}
@@ -76,7 +71,7 @@ const Hero = () => {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-1 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 pt-2 justify-center">
               <button
                 onClick={scrollToUpload}
                 style={{
@@ -103,11 +98,11 @@ const Hero = () => {
 
           {/* Right Column: Classroom Image */}
           <div
-            className="relative h-[400px] lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[40%] lg:h-full order-2"
+            className="relative h-[300px] md:h-[400px] lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[40%] lg:h-full order-2"
             style={{
               backgroundImage: 'url(/hero-classroom.png)',
-              backgroundSize: 'contain',
-              backgroundPosition: 'center right',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
             }}
           >

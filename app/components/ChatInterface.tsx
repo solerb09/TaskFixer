@@ -225,6 +225,10 @@ export default function ChatInterface() {
 
       // Call OpenAI Assistants API with progress updates
       try {
+        // Add frontend timeout (65 seconds - slightly longer than backend)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 65000);
+
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: {
@@ -235,7 +239,10 @@ export default function ChatInterface() {
             threadId: undefined, // New chat, no thread yet
             fileIds: fileIds.map(f => f.id),
           }),
+          signal: controller.signal,
         });
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           const data = await response.json();
@@ -329,6 +336,10 @@ export default function ChatInterface() {
         }
       } catch (error: any) {
         console.error("Error calling API:", error);
+        const errorMessage = error.name === 'AbortError'
+          ? "Request timed out. This question may be outside my scope. Please ask about assignment redesign, teaching strategies, or educational content."
+          : `Error: ${error.message || "Failed to get response. Please try again."}`;
+
         setChats((prev) =>
           prev.map((chat) =>
             chat.id === newChat.id
@@ -338,7 +349,7 @@ export default function ChatInterface() {
                     ...chat.messages.slice(0, -1),
                     {
                       role: "assistant",
-                      content: `Error: ${error.message || "Failed to get response. Please try again."}`,
+                      content: errorMessage,
                     },
                   ],
                 }
@@ -370,6 +381,10 @@ export default function ChatInterface() {
     try {
       const currentChat = chats.find((c) => c.id === selectedChatId);
 
+      // Add frontend timeout (65 seconds - slightly longer than backend)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 65000);
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -380,7 +395,10 @@ export default function ChatInterface() {
           threadId: currentChat?.threadId,
           fileIds: fileIds.map(f => f.id),
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const data = await response.json();
@@ -467,6 +485,10 @@ export default function ChatInterface() {
       }
     } catch (error: any) {
       console.error("Error calling API:", error);
+      const errorMessage = error.name === 'AbortError'
+        ? "Request timed out. This question may be outside my scope. Please ask about assignment redesign, teaching strategies, or educational content."
+        : `Error: ${error.message || "Failed to get response. Please try again."}`;
+
       setChats((prev) =>
         prev.map((chat) =>
           chat.id === selectedChatId
@@ -476,7 +498,7 @@ export default function ChatInterface() {
                   ...chat.messages.slice(0, -1),
                   {
                     role: "assistant",
-                    content: `Error: ${error.message || "Failed to get response. Please try again."}`,
+                    content: errorMessage,
                   },
                 ],
               }

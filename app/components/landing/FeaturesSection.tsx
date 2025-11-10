@@ -70,8 +70,8 @@ const FeaturesSection = () => {
                   <Icon className="w-7 h-7 text-[#E6B400]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-xl mb-2">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <h3 className="font-semibold text-xl mb-2 text-gray-900">{feature.title}</h3>
+                  <p className="text-gray-800">{feature.description}</p>
                 </div>
               </div>
             );

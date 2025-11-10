@@ -27,8 +27,8 @@ const Testimonials = () => {
               key={index}
               className="bg-gray-100 p-8 rounded-lg shadow-lg relative"
             >
-              <Quote className="w-12 h-12 text-yellow-200 absolute top-4 right-4" />
-              <p className="text-lg text-gray-700 mb-6 relative z-10">
+              <Quote className="w-16 h-16 text-yellow-200 absolute -top-2 -right-2 opacity-30" />
+              <p className="text-lg text-gray-800 mb-6 relative z-10">
                 &quot;{testimonial.quote}&quot;
               </p>
               <p className="font-semibold text-[#8E5AE9]">{testimonial.author}</p>

@@ -34,7 +34,7 @@ const TransformationSection = () => {
 
             <button
               onClick={scrollToHowItWorks}
-              className="mt-8 bg-gradient-to-r from-[#4FC3F7] to-[#E6B400] text-white font-bold text-lg px-9 py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
+              className="mt-8 bg-gradient-to-r from-[#A855F7] via-[#F97316] to-[#FBBF24] text-white font-bold text-lg px-9 py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
             >
               Redesign My Assignment →
             </button>
