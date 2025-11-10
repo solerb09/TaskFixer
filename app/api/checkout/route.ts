@@ -68,6 +68,30 @@ export async function POST(request: NextRequest) {
         .from('users')
         .update({ stripe_customer_id: customerId })
         .eq('id', user.id)
+    } else {
+      // Verify customer exists in Stripe (handles test/live mode mismatch)
+      try {
+        await stripe.customers.retrieve(customerId)
+      } catch (error: any) {
+        if (error.code === 'resource_missing') {
+          // Customer doesn't exist, create a new one
+          const customer = await stripe.customers.create({
+            email: user.email!,
+            metadata: {
+              supabase_user_id: user.id,
+            },
+          })
+          customerId = customer.id
+
+          // Update database with new customer ID
+          await (supabase as any)
+            .from('users')
+            .update({ stripe_customer_id: customerId })
+            .eq('id', user.id)
+        } else {
+          throw error
+        }
+      }
     }
 
     // Create checkout session

@@ -123,14 +123,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = async (redirectAfterLogin?: string) => {
     // Set cookie for redirect after OAuth callback
-    if (redirectAfterLogin) {
+    if (redirectAfterLogin && typeof document !== 'undefined') {
       document.cookie = `redirect_after_auth=${redirectAfterLogin}; path=/; max-age=600; SameSite=Lax`;
     }
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
       },
     });
     return { error };
