@@ -203,6 +203,7 @@ export async function POST(req: NextRequest) {
           });
 
           // Handle tool call requirements
+          // @ts-expect-error - requiresAction is a valid event but not in SDK types
           stream.on('requiresAction', async (event: any) => {
             try {
               const toolCalls = event.required_action?.submit_tool_outputs?.tool_calls || [];
