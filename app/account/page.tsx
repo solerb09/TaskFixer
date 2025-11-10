@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function AccountPage() {
-  const { user, profile, usage, loading } = useAuth();
+  const { user, profile, usage, loading, signOut } = useAuth();
   const router = useRouter();
   const [cancelLoading, setCancelLoading] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
@@ -280,11 +280,8 @@ export default function AccountPage() {
 
               <button
                 onClick={async () => {
-                  const { signOut } = await import("../contexts/AuthContext");
-                  // This won't work because useAuth is a hook
-                  // We need to use the context directly
-                  alert("Sign out functionality - reload page after signing out");
-                  window.location.href = "/auth/login";
+                  await signOut();
+                  router.push("/auth/login");
                 }}
                 className="block w-full py-3 px-4 bg-[#2a2a2a] text-white text-center font-medium rounded-lg hover:bg-[#333333] transition-colors border border-[#404040]"
               >
