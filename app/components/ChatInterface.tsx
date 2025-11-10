@@ -26,18 +26,136 @@ export default function ChatInterface() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+  const [deleteConfirmChatId, setDeleteConfirmChatId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const selectedChat = chats.find((c) => c.id === selectedChatId);
 
+  // Load chat history on mount
+  useEffect(() => {
+    loadChatHistory();
+  }, []);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [selectedChat?.messages]);
 
+  // Load chat history from Supabase
+  const loadChatHistory = async () => {
+    try {
+      setIsLoadingHistory(true);
+      const response = await fetch("/api/chat-history");
+
+      if (response.ok) {
+        const data = await response.json();
+        const loadedChats = data.sessions.map((session: any) => ({
+          id: session.id,
+          title: session.title,
+          threadId: session.thread_id,
+          messages: [], // Messages loaded on-demand when chat is selected
+        }));
+        setChats(loadedChats);
+      }
+    } catch (error) {
+      console.error("Error loading chat history:", error);
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  // Load messages for a specific chat
+  const loadChatMessages = async (chatId: string) => {
+    try {
+      const response = await fetch(`/api/chat-history/${chatId}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        setChats((prev) =>
+          prev.map((chat) =>
+            chat.id === chatId
+              ? {
+                  ...chat,
+                  messages: data.chat.messages.map((msg: any) => ({
+                    role: msg.role,
+                    content: msg.content,
+                  })),
+                  threadId: data.chat.threadId,
+                }
+              : chat
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error loading chat messages:", error);
+    }
+  };
+
+  // Save chat to Supabase (filters out files)
+  const saveChatToSupabase = async (chat: Chat) => {
+    try {
+      console.log("🔵 Attempting to save chat:", chat.id, "with", chat.messages.length, "messages");
+
+      // Filter out files from messages before saving
+      const cleanMessages = chat.messages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+
+      const response = await fetch("/api/chat-history", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chatId: chat.id,
+          title: chat.title,
+          threadId: chat.threadId,
+          messages: cleanMessages,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("✅ Chat saved successfully:", data);
+      } else {
+        console.error("❌ Failed to save chat:", data);
+      }
+    } catch (error) {
+      console.error("Error saving chat:", error);
+    }
+  };
+
+  // Delete chat from Supabase
+  const confirmDeleteChat = async () => {
+    if (!deleteConfirmChatId) return;
+
+    try {
+      const response = await fetch(`/api/chat-history/${deleteConfirmChatId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setChats((prev) => prev.filter((chat) => chat.id !== deleteConfirmChatId));
+        if (selectedChatId === deleteConfirmChatId) {
+          setSelectedChatId(null);
+        }
+        setDeleteConfirmChatId(null);
+      } else {
+        console.error("Error deleting chat");
+        alert("Failed to delete chat. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting chat:", error);
+      alert("Failed to delete chat. Please try again.");
+    }
+  };
+
   const createNewChat = () => {
     const newChat: Chat = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(), // Generate proper UUID
       title: "New chat",
       messages: [],
     };
@@ -215,7 +333,7 @@ export default function ChatInterface() {
     // If no chat is selected, create a new one first
     if (!selectedChatId) {
       const newChat: Chat = {
-        id: Date.now().toString(),
+        id: crypto.randomUUID(), // Generate proper UUID
         title: userMessage.slice(0, 30) || "New chat with files",
         messages: [{ role: "user", content: userMessage, files: fileIds.length > 0 ? fileIds : undefined }],
       };
@@ -326,13 +444,25 @@ export default function ChatInterface() {
           }
         }
 
-        // Save threadId
+        // Save threadId and prepare chat for saving
+        const chatToSave: Chat = {
+          id: newChat.id,
+          title: newChat.title,
+          threadId: receivedThreadId || newChat.threadId,
+          messages: [...newChat.messages, { role: "assistant", content: accumulatedContent }]
+        };
+
         if (receivedThreadId) {
           setChats((prev) =>
             prev.map((chat) =>
               chat.id === newChat.id ? { ...chat, threadId: receivedThreadId } : chat
             )
           );
+        }
+
+        // Save chat to Supabase after assistant responds
+        if (chatToSave.messages.length > 0) {
+          await saveChatToSupabase(chatToSave);
         }
       } catch (error: any) {
         console.error("Error calling API:", error);
@@ -362,6 +492,12 @@ export default function ChatInterface() {
       return;
     }
 
+    // Capture current chat state BEFORE updating
+    const currentChat = chats.find((c) => c.id === selectedChatId);
+    if (!currentChat) return;
+
+    const currentTitle = currentChat.title === "New chat" ? (userMessage.slice(0, 30) || "New chat with files") : currentChat.title;
+
     // Add user message and update title
     setChats((prev) =>
       prev.map((chat) =>
@@ -369,7 +505,7 @@ export default function ChatInterface() {
           ? {
               ...chat,
               messages: [...chat.messages, { role: "user", content: userMessage, files: fileIds.length > 0 ? fileIds : undefined }],
-              title: chat.title === "New chat" ? (userMessage.slice(0, 30) || "New chat with files") : chat.title,
+              title: currentTitle,
             }
           : chat
       )
@@ -379,7 +515,6 @@ export default function ChatInterface() {
 
     // Call OpenAI Assistants API with thread ID
     try {
-      const currentChat = chats.find((c) => c.id === selectedChatId);
 
       // Add frontend timeout (65 seconds - slightly longer than backend)
       const controller = new AbortController();
@@ -476,12 +611,29 @@ export default function ChatInterface() {
         }
       }
 
+      // Save threadId and prepare chat for saving
+      const chatToSave: Chat = {
+        id: currentChat.id,
+        title: currentTitle,
+        threadId: receivedThreadId || currentChat.threadId,
+        messages: [
+          ...currentChat.messages,
+          { role: "user", content: userMessage },
+          { role: "assistant", content: accumulatedContent }
+        ]
+      };
+
       if (receivedThreadId) {
         setChats((prev) =>
           prev.map((chat) =>
             chat.id === selectedChatId ? { ...chat, threadId: receivedThreadId } : chat
           )
         );
+      }
+
+      // Save chat to Supabase after assistant responds
+      if (chatToSave.messages.length > 0) {
+        await saveChatToSupabase(chatToSave);
       }
     } catch (error: any) {
       console.error("Error calling API:", error);
@@ -535,19 +687,51 @@ export default function ChatInterface() {
 
         {/* Chat List */}
         <div className="flex-1 overflow-y-auto px-3 py-2">
-          {chats.map((chat) => (
-            <button
-              key={chat.id}
-              onClick={() => setSelectedChatId(chat.id)}
-              className={`w-full text-left px-3 py-2.5 rounded-lg mb-1 text-sm truncate transition-colors ${
-                selectedChatId === chat.id
-                  ? "bg-[#2a2a2a]"
-                  : "hover:bg-[#212121]"
-              }`}
-            >
-              {chat.title}
-            </button>
-          ))}
+          {isLoadingHistory ? (
+            <div className="text-center text-gray-500 py-4 text-sm">
+              Loading chats...
+            </div>
+          ) : chats.length === 0 ? (
+            <div className="text-center text-gray-500 py-4 text-sm">
+              No chats yet. Start a new conversation!
+            </div>
+          ) : (
+            chats.map((chat) => (
+              <div
+                key={chat.id}
+                className={`group relative flex items-center gap-2 px-3 py-2.5 rounded-lg mb-1 text-sm transition-colors ${
+                  selectedChatId === chat.id
+                    ? "bg-[#2a2a2a]"
+                    : "hover:bg-[#212121]"
+                }`}
+              >
+                <button
+                  onClick={async () => {
+                    setSelectedChatId(chat.id);
+                    // Load messages if not already loaded
+                    if (chat.messages.length === 0) {
+                      await loadChatMessages(chat.id);
+                    }
+                  }}
+                  className="flex-1 text-left truncate"
+                >
+                  {chat.title}
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteConfirmChatId(chat.id);
+                  }}
+                  className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-[#333333] rounded transition-opacity"
+                  title="Delete chat"
+                >
+                  <svg className="w-4 h-4 text-gray-400 hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            ))
+          )}
         </div>
         </div>
       )}
@@ -775,6 +959,42 @@ export default function ChatInterface() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmChatId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-[#2a2a2a] rounded-xl p-6 max-w-md w-full mx-4 border border-[#404040]">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white">Delete Chat</h3>
+                <p className="text-sm text-gray-400 mt-1">
+                  Are you sure you want to delete this chat? This action cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setDeleteConfirmChatId(null)}
+                className="flex-1 px-4 py-2.5 rounded-lg bg-[#404040] hover:bg-[#4a4a4a] text-white font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteChat}
+                className="flex-1 px-4 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

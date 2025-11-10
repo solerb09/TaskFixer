@@ -124,6 +124,55 @@ export interface Database {
           updated_at?: string
         }
       }
+      chat_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          thread_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          thread_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          title?: string
+          thread_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      chat_messages: {
+        Row: {
+          id: string
+          chat_session_id: string
+          role: 'user' | 'assistant'
+          content: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          chat_session_id: string
+          role: 'user' | 'assistant'
+          content: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          chat_session_id?: string
+          role?: 'user' | 'assistant'
+          content?: string
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
