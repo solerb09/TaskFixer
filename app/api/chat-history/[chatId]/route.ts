@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { Database } from "@/types/database";
+
+type ChatSession = Database['public']['Tables']['chat_sessions']['Row'];
 
 // GET /api/chat-history/[chatId] - Load a specific chat with all messages
 export async function GET(
@@ -36,6 +39,9 @@ export async function GET(
       );
     }
 
+    // Type assertion after null check
+    const chatSession = session as ChatSession;
+
     // Fetch all messages for this chat
     const { data: messages, error: messagesError } = await supabase
       .from("chat_messages")
@@ -53,12 +59,12 @@ export async function GET(
 
     return NextResponse.json({
       chat: {
-        id: session.id,
-        title: session.title,
-        threadId: session.thread_id,
+        id: chatSession.id,
+        title: chatSession.title,
+        threadId: chatSession.thread_id,
         messages: messages || [],
-        created_at: session.created_at,
-        updated_at: session.updated_at
+        created_at: chatSession.created_at,
+        updated_at: chatSession.updated_at
       }
     });
   } catch (error: any) {

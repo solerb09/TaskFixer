@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { Database } from "@/types/database";
+
+type ChatSessionUpdate = Database['public']['Tables']['chat_sessions']['Update'];
 
 // GET /api/chat-history - Load all user's chat sessions
 export async function GET(req: NextRequest) {
@@ -71,108 +74,59 @@ export async function POST(req: NextRequest) {
       content: msg.content
     }));
 
-    // Check if chat session already exists
-    const { data: existingSession } = await supabase
+    // Use upsert to either insert or update the chat session
+    const sessionData: any = {
+      id: chatId,
+      user_id: user.id,
+      title,
+      thread_id: threadId,
+      updated_at: new Date().toISOString()
+    };
+
+    const { error: upsertError } = await supabase
       .from("chat_sessions")
-      .select("id")
-      .eq("id", chatId)
-      .eq("user_id", user.id)
-      .single();
-
-    if (existingSession) {
-      // Update existing session
-      const { error: updateError } = await supabase
-        .from("chat_sessions")
-        .update({
-          title,
-          thread_id: threadId,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", chatId)
-        .eq("user_id", user.id);
-
-      if (updateError) {
-        console.error("Error updating chat session:", updateError);
-        return NextResponse.json(
-          { error: "Failed to update chat" },
-          { status: 500 }
-        );
-      }
-
-      // Delete existing messages and insert new ones
-      await supabase
-        .from("chat_messages")
-        .delete()
-        .eq("chat_session_id", chatId);
-
-      // Insert all messages
-      const messagesToInsert = cleanMessages.map(msg => ({
-        chat_session_id: chatId,
-        role: msg.role,
-        content: msg.content
-      }));
-
-      const { error: messagesError } = await supabase
-        .from("chat_messages")
-        .insert(messagesToInsert);
-
-      if (messagesError) {
-        console.error("Error saving messages:", messagesError);
-        return NextResponse.json(
-          { error: "Failed to save messages" },
-          { status: 500 }
-        );
-      }
-
-      return NextResponse.json({
-        success: true,
-        chatId,
-        message: "Chat updated successfully"
+      .upsert(sessionData, {
+        onConflict: 'id'
       });
-    } else {
-      // Create new session
-      const { error: sessionError } = await supabase
-        .from("chat_sessions")
-        .insert({
-          id: chatId,
-          user_id: user.id,
-          title,
-          thread_id: threadId
-        });
 
-      if (sessionError) {
-        console.error("Error creating chat session:", sessionError);
-        return NextResponse.json(
-          { error: "Failed to create chat" },
-          { status: 500 }
-        );
-      }
-
-      // Insert messages
-      const messagesToInsert = cleanMessages.map(msg => ({
-        chat_session_id: chatId,
-        role: msg.role,
-        content: msg.content
-      }));
-
-      const { error: messagesError } = await supabase
-        .from("chat_messages")
-        .insert(messagesToInsert);
-
-      if (messagesError) {
-        console.error("Error saving messages:", messagesError);
-        return NextResponse.json(
-          { error: "Failed to save messages" },
-          { status: 500 }
-        );
-      }
-
-      return NextResponse.json({
-        success: true,
-        chatId,
-        message: "Chat created successfully"
-      });
+    if (upsertError) {
+      console.error("Error upserting chat session:", upsertError);
+      return NextResponse.json(
+        { error: "Failed to save chat" },
+        { status: 500 }
+      );
     }
+
+    // Delete existing messages and insert new ones
+    await supabase
+      .from("chat_messages")
+      .delete()
+      .eq("chat_session_id", chatId);
+
+    // Insert all messages
+    const messagesToInsert: any = cleanMessages.map(msg => ({
+      chat_session_id: chatId,
+      role: msg.role,
+      content: msg.content
+    }));
+
+    const { error: messagesError } = await supabase
+      .from("chat_messages")
+      .insert(messagesToInsert);
+
+    if (messagesError) {
+      console.error("Error saving messages:", messagesError);
+      return NextResponse.json(
+        { error: "Failed to save messages" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      chatId,
+      message: "Chat saved successfully"
+    });
   } catch (error: any) {
     console.error("Save chat error:", error);
     return NextResponse.json(
