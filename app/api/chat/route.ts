@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
 import { checkUsageLimit, incrementFileCount, addWordCount, countWords, getFeatureAccess } from "@/lib/usage";
+import { Database } from "@/types/database";
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -107,7 +108,7 @@ export async function POST(req: NextRequest) {
       .from('users')
       .select('subscription_tier')
       .eq('id', user.id)
-      .single();
+      .single<{ subscription_tier: Database['public']['Tables']['users']['Row']['subscription_tier'] }>();
 
     const features = profile ? getFeatureAccess(profile.subscription_tier) : getFeatureAccess('free_trial');
 
