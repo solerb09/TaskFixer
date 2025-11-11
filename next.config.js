@@ -30,6 +30,10 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: "frame-ancestors *",
           },
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
         ],
       },
     ]
