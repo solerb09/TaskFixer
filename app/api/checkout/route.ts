@@ -95,6 +95,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Create checkout session
+    const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/?canceled=true`
+    const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/?success=true`
+
+    console.log('Checkout URLs:', { cancelUrl, successUrl })
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       line_items: [
@@ -104,8 +109,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/?canceled=true`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       metadata: {
         user_id: user.id,
         plan: 'educator',
