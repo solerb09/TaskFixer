@@ -1,7 +1,14 @@
-"use client";
-
 import "./globals.css";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthProvider";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "TaskFixerAI Chat",
+  description: "AI-powered task management assistant by Creative Transformations Consulting",
+  icons: {
+    icon: "/logo.png",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -10,11 +17,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <title>TaskFixerAI Chat</title>
-        <meta name="description" content="AI-powered task management assistant by Creative Transformations Consulting" />
-        <link rel="icon" href="/logo.png" type="image/png" />
-      </head>
       <body>
         <AuthProvider>{children}</AuthProvider>
       </body>
