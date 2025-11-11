@@ -94,9 +94,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create checkout session using API redirect handler
-    const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/stripe-redirect?status=canceled`
-    const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/stripe-redirect?status=success`
+    // Create checkout session with dedicated success/cancel pages
+    const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/checkout/cancel`
+    const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success`
 
     console.log('Checkout URLs:', { cancelUrl, successUrl })
 
