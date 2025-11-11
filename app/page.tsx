@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from './contexts/AuthContext';
 import Header from './components/landing/Header';
 import Hero from './components/landing/Hero';
@@ -17,9 +17,14 @@ import FinalCTA from './components/landing/FinalCTA';
 import PricingSection from './components/landing/PricingSection';
 import Footer from './components/landing/Footer';
 
-export default function LandingPage() {
+function LandingPageContent() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get query parameters
+  const canceled = searchParams.get('canceled');
+  const success = searchParams.get('success');
 
   useEffect(() => {
     // If user is already authenticated, redirect to chat
@@ -65,5 +70,22 @@ export default function LandingPage() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-2xl p-3 animate-pulse">
+            <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
+          </div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    }>
+      <LandingPageContent />
+    </Suspense>
   );
 }
