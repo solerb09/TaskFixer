@@ -4,9 +4,16 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/contexts/AuthContext';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function CheckoutCancelPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
+
+  useEffect(() => {
+    console.log('Cancel page loaded successfully');
+  }, []);
 
   useEffect(() => {
     // If user is authenticated, redirect to chat after 3 seconds

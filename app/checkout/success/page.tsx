@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/contexts/AuthContext';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function CheckoutSuccessPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
