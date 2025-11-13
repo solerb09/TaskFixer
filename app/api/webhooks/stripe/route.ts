@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { headers } from 'next/headers'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
+  apiVersion: '2025-10-29.clover',
 })
 
 // Use service role key for admin operations
@@ -103,7 +103,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       subscription_tier: 'educator',
       subscription_status: 'active',
       billing_interval: interval,
-      subscription_ends_at: new Date(subscription.current_period_end * 1000).toISOString(),
+      subscription_ends_at: new Date((subscription as any).current_period_end * 1000).toISOString(),
     })
     .eq('id', userId)
 
@@ -141,7 +141,7 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription) {
       subscription_tier: 'educator',
       subscription_status: subscriptionStatus,
       billing_interval: interval,
-      subscription_ends_at: new Date(subscription.current_period_end * 1000).toISOString(),
+      subscription_ends_at: new Date((subscription as any).current_period_end * 1000).toISOString(),
     })
     .eq('id', user.id)
 

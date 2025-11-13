@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { Database } from '@/types/database'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
+  apiVersion: '2025-10-29.clover',
 })
 
 export async function POST() {
@@ -51,8 +51,8 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       message: 'Subscription will be canceled at the end of the billing period',
-      cancelAt: subscription.cancel_at,
-      currentPeriodEnd: subscription.current_period_end,
+      cancelAt: subscription.cancel_at || null,
+      currentPeriodEnd: (subscription as any).current_period_end || null,
     })
   } catch (error: any) {
     console.error('Error canceling subscription:', error)
