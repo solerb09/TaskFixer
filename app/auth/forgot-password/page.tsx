@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -40,13 +40,13 @@ export default function ForgotPasswordPage() {
             <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-semibold mb-2">Reset your password</h1>
-          <p className="text-gray-400">
+          <p className="text-text-secondary">
             Enter your email address and we'll send you a link to reset your password
           </p>
         </div>
 
         {/* Forgot Password Form */}
-        <div className="bg-[#171717] border border-[#2a2a2a] rounded-2xl p-8">
+        <div className="bg-primary-bg border border-border-default rounded-2xl p-8">
           {success ? (
             <div className="space-y-4">
               <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-sm text-green-400">
@@ -56,11 +56,11 @@ export default function ForgotPasswordPage() {
                   Click the link in the email to reset your password.
                 </p>
               </div>
-              <div className="text-center text-sm text-gray-400">
+              <div className="text-center text-sm text-text-secondary">
                 <p>Didn't receive the email? Check your spam folder or</p>
                 <button
                   onClick={() => setSuccess(false)}
-                  className="text-white hover:underline mt-1"
+                  className="text-foreground hover:underline mt-1"
                 >
                   try again
                 </button>
@@ -84,7 +84,7 @@ export default function ForgotPasswordPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-[#2a2a2a] border border-[#404040] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  className="w-full bg-secondary-bg border border-border-hover rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="you@example.com"
                 />
               </div>
@@ -100,9 +100,9 @@ export default function ForgotPasswordPage() {
           )}
 
           {/* Back to Login Link */}
-          <p className="text-center text-sm text-gray-400 mt-6">
+          <p className="text-center text-sm text-text-secondary mt-6">
             Remember your password?{" "}
-            <Link href="/auth/login" className="text-white hover:underline">
+            <Link href="/auth/login" className="text-foreground hover:underline">
               Back to login
             </Link>
           </p>

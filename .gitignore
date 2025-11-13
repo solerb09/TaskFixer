@@ -48,3 +48,6 @@ next-env.d.ts
 # Documentation files (keep local only)
 *.md
 !README.md
+
+# Admin scripts (keep local only)
+scripts/grant-admin-subscription.ts

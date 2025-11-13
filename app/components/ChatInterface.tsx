@@ -663,12 +663,12 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex h-screen bg-[#0f0f0f] text-white">
+    <div className="flex h-screen bg-background text-foreground">
       {/* Sidebar */}
       {isSidebarOpen && (
-        <div className="w-64 bg-[#171717] border-r border-[#2a2a2a] flex flex-col">
+        <div className="w-64 bg-primary-bg border-r border-border-default flex flex-col">
         {/* Profile Menu */}
-        <div className="p-3 border-b border-[#2a2a2a]">
+        <div className="p-3 border-b border-border-default">
           <ProfileMenu />
         </div>
 
@@ -676,7 +676,7 @@ export default function ChatInterface() {
         <div className="p-3">
           <button
             onClick={createNewChat}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border border-[#2a2a2a] hover:bg-[#2a2a2a] transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border border-border-default hover:bg-secondary-bg transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -688,11 +688,11 @@ export default function ChatInterface() {
         {/* Chat List */}
         <div className="flex-1 overflow-y-auto px-3 py-2">
           {isLoadingHistory ? (
-            <div className="text-center text-gray-500 py-4 text-sm">
+            <div className="text-center text-text-tertiary py-4 text-sm">
               Loading chats...
             </div>
           ) : chats.length === 0 ? (
-            <div className="text-center text-gray-500 py-4 text-sm">
+            <div className="text-center text-text-tertiary py-4 text-sm">
               No chats yet. Start a new conversation!
             </div>
           ) : (
@@ -701,8 +701,8 @@ export default function ChatInterface() {
                 key={chat.id}
                 className={`group relative flex items-center gap-2 px-3 py-2.5 rounded-lg mb-1 text-sm transition-colors ${
                   selectedChatId === chat.id
-                    ? "bg-[#2a2a2a]"
-                    : "hover:bg-[#212121]"
+                    ? "bg-secondary-bg"
+                    : "hover:bg-secondary-bg/50"
                 }`}
               >
                 <button
@@ -722,10 +722,10 @@ export default function ChatInterface() {
                     e.stopPropagation();
                     setDeleteConfirmChatId(chat.id);
                   }}
-                  className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-[#333333] rounded transition-opacity"
+                  className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-tertiary-bg rounded transition-opacity"
                   title="Delete chat"
                 >
-                  <svg className="w-4 h-4 text-gray-400 hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-text-secondary hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
@@ -741,10 +741,10 @@ export default function ChatInterface() {
         {/* Toggle Sidebar Button - Compact ChatGPT-style */}
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="absolute top-3 left-3 z-10 p-1.5 rounded-md hover:bg-[#2a2a2a] transition-colors"
+          className="absolute top-3 left-3 z-10 p-1.5 rounded-md hover:bg-secondary-bg transition-colors"
           title={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
         >
-          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -757,8 +757,8 @@ export default function ChatInterface() {
                 <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
               </div>
               <h1 className="text-3xl font-semibold mb-4">TaskFixer AI</h1>
-              <p className="text-sm text-gray-500 mb-2">By Jamiylah Jones</p>
-              <p className="text-gray-300 leading-relaxed mb-8">
+              <p className="text-sm text-text-tertiary mb-2">By Jamiylah Jones</p>
+              <p className="text-text-secondary leading-relaxed mb-8">
                 TaskFixer AI helps teachers redesign assignments, assessments, and projects into higher-order, cheat-resistant learning tasks. Teachers can use it to create new tasks, improve existing ones, or analyze student submissions. Each redesign includes reflections, rubrics, and tips for ethical AI use.
               </p>
 
@@ -766,17 +766,17 @@ export default function ChatInterface() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-xl mx-auto">
                 <button
                   onClick={() => handleConversationStarter("Can you help me redesign this assignment to make it cheat-proof and more rigorous?")}
-                  className="text-left p-4 bg-[#2a2a2a] hover:bg-[#333333] rounded-xl transition-colors border border-[#404040] hover:border-[#4a4a4a]"
+                  className="text-left p-4 bg-secondary-bg hover:bg-tertiary-bg rounded-xl transition-colors border border-border-default hover:border-border-hover"
                 >
-                  <p className="text-sm text-gray-300">
+                  <p className="text-sm text-text-secondary">
                     Can you help me redesign this assignment to make it cheat-proof and more rigorous?
                   </p>
                 </button>
                 <button
                   onClick={() => handleConversationStarter("Can you help me create a new project idea that includes responsible AI use?")}
-                  className="text-left p-4 bg-[#2a2a2a] hover:bg-[#333333] rounded-xl transition-colors border border-[#404040] hover:border-[#4a4a4a]"
+                  className="text-left p-4 bg-secondary-bg hover:bg-tertiary-bg rounded-xl transition-colors border border-border-default hover:border-border-hover"
                 >
-                  <p className="text-sm text-gray-300">
+                  <p className="text-sm text-text-secondary">
                     Can you help me create a new project idea that includes responsible AI use?
                   </p>
                 </button>
@@ -802,7 +802,7 @@ export default function ChatInterface() {
                   >
                     <div className={`flex gap-4 ${message.role === "user" ? "flex-row-reverse" : ""}`}>
                       {/* Avatar */}
-                      <div className="w-8 h-8 rounded-full bg-[#2a2a2a] flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-secondary-bg flex items-center justify-center flex-shrink-0">
                         {message.role === "user" ? (
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -816,7 +816,7 @@ export default function ChatInterface() {
 
                       {/* Message Content */}
                       <div className="flex-1 space-y-1">
-                        <div className="text-sm font-medium text-gray-400">
+                        <div className="text-sm font-medium text-text-secondary">
                           {message.role === "user" ? "You" : "TaskFixerAI"}
                         </div>
                         {/* Files */}
@@ -825,12 +825,12 @@ export default function ChatInterface() {
                             {message.files.map((file) => (
                               <div
                                 key={file.id}
-                                className="flex items-center gap-2 px-3 py-1.5 bg-[#2a2a2a] rounded-lg text-xs"
+                                className="flex items-center gap-2 px-3 py-1.5 bg-secondary-bg rounded-lg text-xs"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                 </svg>
-                                <span className="text-gray-300">{file.name}</span>
+                                <span className="text-text-secondary">{file.name}</span>
                               </div>
                             ))}
                           </div>
@@ -851,17 +851,17 @@ export default function ChatInterface() {
               {isLoading && (
                 <div className="mb-8">
                   <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full bg-[#2a2a2a] flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-secondary-bg flex items-center justify-center flex-shrink-0">
                       <div className="w-4 h-4">
                         <img src="/logo.png" alt="AI" className="w-full h-full object-cover rounded-full" />
                       </div>
                     </div>
                     <div className="flex-1 space-y-1">
-                      <div className="text-sm font-medium text-gray-400">TaskFixerAI</div>
+                      <div className="text-sm font-medium text-text-secondary">TaskFixerAI</div>
                       <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                       </div>
                     </div>
                   </div>
@@ -874,7 +874,7 @@ export default function ChatInterface() {
         )}
 
         {/* Input Area - Always visible */}
-        <div className="border-t border-[#2a2a2a] p-4">
+        <div className="border-t border-border-default p-4">
           <div className="max-w-3xl mx-auto">
             {/* Uploaded Files Display */}
             {uploadedFiles.length > 0 && (
@@ -882,15 +882,15 @@ export default function ChatInterface() {
                 {uploadedFiles.map((file, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 px-3 py-2 bg-[#2a2a2a] rounded-lg text-sm border border-[#404040]"
+                    className="flex items-center gap-2 px-3 py-2 bg-secondary-bg rounded-lg text-sm border border-border-default"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
-                    <span className="text-gray-300 max-w-[200px] truncate">{file.name}</span>
+                    <span className="text-text-secondary max-w-[200px] truncate">{file.name}</span>
                     <button
                       onClick={() => removeFile(index)}
-                      className="ml-1 text-gray-400 hover:text-white transition-colors"
+                      className="ml-1 text-text-secondary hover:text-foreground transition-colors"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -913,7 +913,7 @@ export default function ChatInterface() {
                     }
                   }}
                   placeholder="Message TaskFixerAI..."
-                  className="w-full bg-[#2a2a2a] rounded-xl px-4 py-3 pl-12 pr-12 resize-none focus:outline-none focus:ring-1 focus:ring-[#404040] placeholder-gray-500"
+                  className="w-full bg-secondary-bg rounded-xl px-4 py-3 pl-12 pr-12 resize-none focus:outline-none focus:ring-1 focus:ring-border-hover placeholder-text-tertiary text-foreground"
                   rows={1}
                   style={{
                     minHeight: "52px",
@@ -926,7 +926,7 @@ export default function ChatInterface() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isLoading || isUploading}
-                  className="absolute left-2 bottom-2 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#333333] disabled:opacity-50 transition-colors"
+                  className="absolute left-2 bottom-2 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-tertiary-bg disabled:opacity-50 transition-colors"
                   title="Attach files (PDF, DOC, TXT)"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -944,10 +944,10 @@ export default function ChatInterface() {
                 <button
                   type="submit"
                   disabled={(!input.trim() && uploadedFiles.length === 0) || isLoading || isUploading}
-                  className="absolute right-2 bottom-2 w-8 h-8 flex items-center justify-center rounded-lg bg-white text-black hover:bg-gray-200 disabled:opacity-50 disabled:hover:bg-white transition-colors"
+                  className="absolute right-2 bottom-2 w-8 h-8 flex items-center justify-center rounded-lg bg-brand-purple text-white hover:bg-brand-purple-dark disabled:opacity-50 disabled:hover:bg-brand-purple transition-colors"
                 >
                   {isUploading ? (
-                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
@@ -963,7 +963,7 @@ export default function ChatInterface() {
       {/* Delete Confirmation Modal */}
       {deleteConfirmChatId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-[#2a2a2a] rounded-xl p-6 max-w-md w-full mx-4 border border-[#404040]">
+          <div className="bg-primary-bg rounded-xl p-6 max-w-md w-full mx-4 border border-border-default">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -971,8 +971,8 @@ export default function ChatInterface() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white">Delete Chat</h3>
-                <p className="text-sm text-gray-400 mt-1">
+                <h3 className="text-lg font-semibold text-foreground">Delete Chat</h3>
+                <p className="text-sm text-text-secondary mt-1">
                   Are you sure you want to delete this chat? This action cannot be undone.
                 </p>
               </div>
@@ -981,7 +981,7 @@ export default function ChatInterface() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setDeleteConfirmChatId(null)}
-                className="flex-1 px-4 py-2.5 rounded-lg bg-[#404040] hover:bg-[#4a4a4a] text-white font-medium transition-colors"
+                className="flex-1 px-4 py-2.5 rounded-lg bg-secondary-bg hover:bg-tertiary-bg text-foreground font-medium transition-colors"
               >
                 Cancel
               </button>

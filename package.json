@@ -4,14 +4,15 @@
   "description": "TaskFixerAI Chat Interface for Lovable Integration",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "create-assistant": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/create-assistant.ts",
     "update-assistant": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/update-assistant-tools.ts",
     "list-assistants": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/list-assistants.ts",
-    "delete-assistant": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/delete-assistant.ts"
+    "delete-assistant": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/delete-assistant.ts",
+    "grant-admin": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/grant-admin-subscription.ts"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
@@ -27,7 +28,7 @@
     "react-markdown": "^10.1.0",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
-    "stripe": "^17.7.0"
+    "stripe": "^19.3.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

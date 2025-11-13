@@ -111,13 +111,13 @@ function CheckoutForm() {
 
   if (authLoading || (user && loading && !error)) {
     return (
-      <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
           <h2 className="text-xl font-semibold mb-2">
             {!user ? "Checking authentication..." : "Redirecting to checkout..."}
           </h2>
-          <p className="text-gray-400">Please wait</p>
+          <p className="text-text-secondary">Please wait</p>
         </div>
       </div>
     );
@@ -125,7 +125,7 @@ function CheckoutForm() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center">
           <div className="w-16 h-16 mx-auto mb-6 bg-red-500/20 border border-red-500/40 rounded-full flex items-center justify-center">
             <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +133,7 @@ function CheckoutForm() {
             </svg>
           </div>
           <h1 className="text-2xl font-semibold mb-4">Checkout Error</h1>
-          <p className="text-gray-400 mb-6">{error}</p>
+          <p className="text-text-secondary mb-6">{error}</p>
           <div className="space-y-3">
             <button
               onClick={() => {
@@ -146,7 +146,7 @@ function CheckoutForm() {
             </button>
             <Link
               href="/"
-              className="block w-full py-3 px-4 bg-[#2a2a2a] text-white text-center font-medium rounded-lg hover:bg-[#333333] transition-colors border border-[#404040]"
+              className="block w-full py-3 px-4 bg-secondary-bg text-foreground text-center font-medium rounded-lg hover:bg-tertiary-bg transition-colors border border-border-hover"
             >
               Back to Home
             </Link>
@@ -158,8 +158,8 @@ function CheckoutForm() {
 
   // Show checkout summary while processing
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white">
-      <div className="border-b border-[#2a2a2a]">
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="border-b border-border-default">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white rounded-xl p-2">
@@ -173,17 +173,17 @@ function CheckoutForm() {
       <div className="max-w-2xl mx-auto px-4 py-16">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Complete Your Purchase</h1>
-          <p className="text-gray-400">You'll be redirected to Stripe to complete payment</p>
+          <p className="text-text-secondary">You'll be redirected to Stripe to complete payment</p>
         </div>
 
-        <div className="bg-[#171717] border border-[#2a2a2a] rounded-2xl p-8">
+        <div className="bg-primary-bg border border-border-default rounded-2xl p-8">
           <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
 
           <div className="space-y-4 mb-6">
             <div className="flex justify-between items-center">
               <div>
                 <p className="font-medium">{details.name}</p>
-                <p className="text-sm text-gray-400">{details.price}</p>
+                <p className="text-sm text-text-secondary">{details.price}</p>
               </div>
               <p className="text-xl font-semibold">{details.total}</p>
             </div>
@@ -195,29 +195,29 @@ function CheckoutForm() {
             )}
           </div>
 
-          <div className="border-t border-[#2a2a2a] pt-6 space-y-3">
+          <div className="border-t border-border-default pt-6 space-y-3">
             <div className="flex items-start gap-3 text-sm">
               <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="text-gray-300">Unlimited PDF redesigns</span>
+              <span className="text-text-secondary">Unlimited PDF redesigns</span>
             </div>
             <div className="flex items-start gap-3 text-sm">
               <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="text-gray-300">Full reflection & differentiation features</span>
+              <span className="text-text-secondary">Full reflection & differentiation features</span>
             </div>
             <div className="flex items-start gap-3 text-sm">
               <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="text-gray-300">Email support & all future updates</span>
+              <span className="text-text-secondary">Email support & all future updates</span>
             </div>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-[#2a2a2a]">
-            <p className="text-xs text-gray-500 text-center">
+          <div className="mt-6 pt-6 border-t border-border-default">
+            <p className="text-xs text-text-tertiary text-center">
               Secure payment powered by Stripe. Cancel anytime.
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function CheckoutPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] flex items-center justify-center p-4">
-        <div className="text-white">Loading...</div>
+        <div className="text-foreground">Loading...</div>
       </div>
     }>
       <CheckoutForm />

@@ -36,7 +36,7 @@ export const exportChatToPDF = (chat: Chat) => {
     ? assistantMessages[assistantMessages.length - 1].content
     : 'No assignment content available.';
 
-  // Extract the assignment title and clean content
+  // Extract the assignment title from the AI's response content
   let assignmentTitle = 'Assignment';
   let contentWithoutTitle = finalResponse;
 
@@ -44,7 +44,7 @@ export const exportChatToPDF = (chat: Chat) => {
   let contentStartIndex = 0;
   let foundTitle = false;
 
-  // Find the title and where "Project Overview" starts
+  // Always try to extract title from the AI's response content
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     const lineLower = line.toLowerCase();
@@ -54,6 +54,16 @@ export const exportChatToPDF = (chat: Chat) => {
       const titleMatch = line.match(/assignment title:\s*(.+)/i);
       if (titleMatch) {
         assignmentTitle = titleMatch[1].trim().replace(/\*\*/g, '').replace(/\*/g, '');
+        foundTitle = true;
+        continue;
+      }
+    }
+
+    // Look for "Project:" pattern (common in responses)
+    if (!foundTitle && (lineLower.startsWith('project:') || lineLower.includes('**project:**'))) {
+      const projectMatch = line.match(/\*?\*?project:\s*(.+)/i);
+      if (projectMatch) {
+        assignmentTitle = projectMatch[1].trim().replace(/\*\*/g, '').replace(/\*/g, '');
         foundTitle = true;
         continue;
       }
@@ -155,77 +165,103 @@ export const exportChatToPDF = (chat: Chat) => {
 
     const numCols = headers.length;
     const colWidth = maxWidth / numCols;
-    const rowHeight = 8;
     const cellPadding = 2;
-
-    // Check if table fits on page
-    const tableHeight = (rows.length + 1) * rowHeight;
-    checkPageBreak(tableHeight + 10);
+    const fontSize = 8;
+    const lineHeight = fontSize * 0.45;
 
     yPosition += 3;
 
-    // Draw header row
+    // Draw header row with dynamic height
+    pdf.setFontSize(fontSize);
+    pdf.setFont('helvetica', 'bold');
+
+    // Calculate header row height
+    let headerRowHeight = 7;
+    const headerWrappedTexts: string[][] = [];
+    for (let col = 0; col < numCols; col++) {
+      const maxCellWidth = colWidth - (cellPadding * 2);
+      const wrappedText = pdf.splitTextToSize(headers[col], maxCellWidth);
+      headerWrappedTexts.push(wrappedText);
+      const cellHeight = (wrappedText.length * lineHeight) + (cellPadding * 2);
+      headerRowHeight = Math.max(headerRowHeight, cellHeight);
+    }
+
+    // Check if table header fits on page
+    checkPageBreak(headerRowHeight + 10);
+
+    // Draw header background and borders
     pdf.setFillColor(240, 240, 240);
-    pdf.rect(margin, yPosition, maxWidth, rowHeight, 'F');
+    pdf.rect(margin, yPosition, maxWidth, headerRowHeight, 'F');
     pdf.setDrawColor(180, 180, 180);
     pdf.setLineWidth(0.3);
 
-    // Header borders
+    // Draw header cells with wrapped text
     for (let col = 0; col < numCols; col++) {
       const x = margin + (col * colWidth);
-      pdf.rect(x, yPosition, colWidth, rowHeight);
+      pdf.rect(x, yPosition, colWidth, headerRowHeight);
 
-      // Header text
-      pdf.setFontSize(9);
-      pdf.setFont('helvetica', 'bold');
+      // Header text (centered)
       pdf.setTextColor(0, 0, 0);
-      const headerText = headers[col];
-      const textWidth = pdf.getTextWidth(headerText);
-      const textX = x + (colWidth - textWidth) / 2;
-      pdf.text(headerText, textX, yPosition + rowHeight / 2 + 1.5);
+      const wrappedText = headerWrappedTexts[col];
+      const textStartY = yPosition + cellPadding + lineHeight;
+
+      for (let lineIdx = 0; lineIdx < wrappedText.length; lineIdx++) {
+        const textWidth = pdf.getTextWidth(wrappedText[lineIdx]);
+        const textX = x + (colWidth - textWidth) / 2;
+        pdf.text(wrappedText[lineIdx], textX, textStartY + (lineIdx * lineHeight));
+      }
     }
 
-    yPosition += rowHeight;
+    yPosition += headerRowHeight;
 
-    // Draw data rows
+    // Draw data rows with dynamic heights
     pdf.setFont('helvetica', 'normal');
     for (let row = 0; row < rows.length; row++) {
       const cells = rows[row];
 
+      // Calculate row height based on cell content
+      let currentRowHeight = 7;
+      const cellWrappedTexts: string[][] = [];
+
+      for (let col = 0; col < numCols && col < cells.length; col++) {
+        const maxCellWidth = colWidth - (cellPadding * 2);
+        const wrappedText = pdf.splitTextToSize(cells[col], maxCellWidth);
+        cellWrappedTexts.push(wrappedText);
+        const cellHeight = (wrappedText.length * lineHeight) + (cellPadding * 2);
+        currentRowHeight = Math.max(currentRowHeight, cellHeight);
+      }
+
+      // Check if row fits on current page
+      checkPageBreak(currentRowHeight + 5);
+
       // Alternate row colors for better readability
       if (row % 2 === 1) {
         pdf.setFillColor(250, 250, 250);
-        pdf.rect(margin, yPosition, maxWidth, rowHeight, 'F');
+        pdf.rect(margin, yPosition, maxWidth, currentRowHeight, 'F');
       }
 
+      // Draw cells with wrapped text
       for (let col = 0; col < numCols && col < cells.length; col++) {
         const x = margin + (col * colWidth);
 
         // Cell border
         pdf.setDrawColor(180, 180, 180);
-        pdf.rect(x, yPosition, colWidth, rowHeight);
+        pdf.rect(x, yPosition, colWidth, currentRowHeight);
 
         // Cell text
-        pdf.setFontSize(9);
+        pdf.setFontSize(fontSize);
         pdf.setTextColor(0, 0, 0);
-        const cellText = cells[col];
+        const wrappedText = cellWrappedTexts[col];
+        const textX = x + cellPadding;
+        const textStartY = yPosition + cellPadding + lineHeight;
 
-        // Wrap text if too long
-        const maxCellWidth = colWidth - (cellPadding * 2);
-        const wrappedText = pdf.splitTextToSize(cellText, maxCellWidth);
-        const textY = yPosition + rowHeight / 2 + 1.5;
-
-        if (wrappedText.length === 1) {
-          const textX = x + cellPadding;
-          pdf.text(wrappedText[0], textX, textY);
-        } else {
-          // For wrapped text, just show first line
-          const textX = x + cellPadding;
-          pdf.text(wrappedText[0], textX, textY);
+        // Draw all lines of wrapped text
+        for (let lineIdx = 0; lineIdx < wrappedText.length; lineIdx++) {
+          pdf.text(wrappedText[lineIdx], textX, textStartY + (lineIdx * lineHeight));
         }
       }
 
-      yPosition += rowHeight;
+      yPosition += currentRowHeight;
     }
 
     yPosition += 5;

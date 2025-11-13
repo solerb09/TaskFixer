@@ -53,14 +53,14 @@ function SignupForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="w-full max-w-md text-center">
           <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-2xl p-3">
             <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-semibold mb-2">Welcome to TaskFixerAI!</h1>
-          <p className="text-gray-400 mb-4">Your account has been created successfully.</p>
-          <p className="text-sm text-gray-500">
+          <p className="text-text-secondary mb-4">Your account has been created successfully.</p>
+          <p className="text-sm text-text-tertiary">
             You're being redirected to the chat...
           </p>
         </div>
@@ -69,7 +69,7 @@ function SignupForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -77,11 +77,11 @@ function SignupForm() {
             <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-semibold mb-2">Get started with TaskFixerAI</h1>
-          <p className="text-gray-400">Create your account and start your free trial</p>
+          <p className="text-text-secondary">Create your account and start your free trial</p>
         </div>
 
         {/* Signup Form */}
-        <div className="bg-[#171717] border border-[#2a2a2a] rounded-2xl p-8">
+        <div className="bg-primary-bg border border-border-default rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-sm text-red-400">
@@ -99,7 +99,7 @@ function SignupForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="w-full bg-[#2a2a2a] border border-[#404040] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="Jane Doe"
               />
             </div>
@@ -114,7 +114,7 @@ function SignupForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-[#2a2a2a] border border-[#404040] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="you@example.com"
               />
             </div>
@@ -129,33 +129,33 @@ function SignupForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-[#2a2a2a] border border-[#404040] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="••••••••"
               />
-              <p className="text-xs text-gray-500 mt-1">Must be at least 6 characters</p>
+              <p className="text-xs text-text-tertiary mt-1">Must be at least 6 characters</p>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-brand-purple text-white font-medium py-3 rounded-lg hover:bg-brand-purple-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
 
           {/* Sign In Link */}
-          <p className="text-center text-sm text-gray-400 mt-6">
+          <p className="text-center text-sm text-text-secondary mt-6">
             Already have an account?{" "}
-            <Link href={`/auth/login${redirect !== "/" ? `?redirect=${encodeURIComponent(redirect)}` : ""}`} className="text-white hover:underline">
+            <Link href={`/auth/login${redirect !== "/" ? `?redirect=${encodeURIComponent(redirect)}` : ""}`} className="text-foreground hover:underline">
               Sign in
             </Link>
           </p>
 
           {/* Free Trial Info */}
-          <div className="mt-6 p-4 bg-[#2a2a2a]/50 rounded-lg border border-[#404040]">
-            <p className="text-xs text-gray-400 text-center">
-              Start with a <span className="text-white font-medium">free trial</span>: 1 redesigned PDF with
+          <div className="mt-6 p-4 bg-secondary-bg/50 rounded-lg border border-border-default">
+            <p className="text-xs text-text-secondary text-center">
+              Start with a <span className="text-foreground font-medium">free trial</span>: 1 redesigned PDF with
               reflection prompts (up to 800 words or 1 file)
             </p>
           </div>
@@ -168,8 +168,8 @@ function SignupForm() {
 export default function SignupPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] flex items-center justify-center p-4">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="text-foreground">Loading...</div>
       </div>
     }>
       <SignupForm />

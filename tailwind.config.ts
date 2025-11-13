@@ -6,11 +6,20 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        'primary-bg': "var(--primary-bg)",
+        'secondary-bg': "var(--secondary-bg)",
+        'tertiary-bg': "var(--tertiary-bg)",
+        'border-default': "var(--border)",
+        'border-hover': "var(--border-hover)",
+        'text-primary': "var(--text-primary)",
+        'text-secondary': "var(--text-secondary)",
+        'text-tertiary': "var(--text-tertiary)",
         // TaskFixerAI Brand Colors
         brand: {
           purple: {

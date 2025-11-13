@@ -59,19 +59,19 @@ export default function ResetPasswordPage() {
 
   if (!hasSession) {
     return (
-      <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-2xl p-3">
               <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
             </div>
             <h1 className="text-2xl font-semibold mb-2">Invalid or Expired Link</h1>
-            <p className="text-gray-400 mb-6">
+            <p className="text-text-secondary mb-6">
               This password reset link is invalid or has expired.
             </p>
           </div>
-          <div className="bg-[#171717] border border-[#2a2a2a] rounded-2xl p-8">
-            <p className="text-center text-sm text-gray-400">
+          <div className="bg-primary-bg border border-border-default rounded-2xl p-8">
+            <p className="text-center text-sm text-text-secondary">
               Please request a new password reset link.
             </p>
             <div className="mt-6 space-y-3">
@@ -83,7 +83,7 @@ export default function ResetPasswordPage() {
               </Link>
               <Link
                 href="/auth/login"
-                className="block w-full text-center text-sm text-gray-400 hover:text-white transition-colors"
+                className="block w-full text-center text-sm text-text-secondary hover:text-foreground transition-colors"
               >
                 Back to login
               </Link>
@@ -95,7 +95,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -103,13 +103,13 @@ export default function ResetPasswordPage() {
             <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-semibold mb-2">Set new password</h1>
-          <p className="text-gray-400">
+          <p className="text-text-secondary">
             Enter your new password below
           </p>
         </div>
 
         {/* Reset Password Form */}
-        <div className="bg-[#171717] border border-[#2a2a2a] rounded-2xl p-8">
+        <div className="bg-primary-bg border border-border-default rounded-2xl p-8">
           {success ? (
             <div className="space-y-4">
               <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-sm text-green-400">
@@ -137,7 +137,7 @@ export default function ResetPasswordPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full bg-[#2a2a2a] border border-[#404040] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  className="w-full bg-secondary-bg border border-border-hover rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="••••••••"
                   minLength={6}
                 />
@@ -153,7 +153,7 @@ export default function ResetPasswordPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full bg-[#2a2a2a] border border-[#404040] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  className="w-full bg-secondary-bg border border-border-hover rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="••••••••"
                   minLength={6}
                 />
@@ -171,9 +171,9 @@ export default function ResetPasswordPage() {
 
           {/* Back to Login Link */}
           {!success && (
-            <p className="text-center text-sm text-gray-400 mt-6">
+            <p className="text-center text-sm text-text-secondary mt-6">
               Remember your password?{" "}
-              <Link href="/auth/login" className="text-white hover:underline">
+              <Link href="/auth/login" className="text-foreground hover:underline">
                 Back to login
               </Link>
             </p>

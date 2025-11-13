@@ -39,7 +39,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -47,11 +47,11 @@ function LoginForm() {
             <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-semibold mb-2">Welcome back</h1>
-          <p className="text-gray-400">Sign in to your TaskFixerAI account</p>
+          <p className="text-text-secondary">Sign in to your TaskFixerAI account</p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-[#171717] border border-[#2a2a2a] rounded-2xl p-8">
+        <div className="bg-primary-bg border border-border-default rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-sm text-red-400">
@@ -69,7 +69,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-[#2a2a2a] border border-[#404040] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="you@example.com"
               />
             </div>
@@ -79,7 +79,7 @@ function LoginForm() {
                 <label htmlFor="password" className="block text-sm font-medium">
                   Password
                 </label>
-                <Link href="/auth/forgot-password" className="text-sm text-gray-400 hover:text-white transition-colors">
+                <Link href="/auth/forgot-password" className="text-sm text-text-secondary hover:text-foreground transition-colors">
                   Forgot password?
                 </Link>
               </div>
@@ -89,7 +89,7 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-[#2a2a2a] border border-[#404040] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="••••••••"
               />
             </div>
@@ -97,16 +97,16 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-brand-purple text-white font-medium py-3 rounded-lg hover:bg-brand-purple-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
           {/* Sign Up Link */}
-          <p className="text-center text-sm text-gray-400 mt-6">
+          <p className="text-center text-sm text-text-secondary mt-6">
             Don't have an account?{" "}
-            <Link href={`/auth/signup${redirect !== "/" ? `?redirect=${encodeURIComponent(redirect)}` : ""}`} className="text-white hover:underline">
+            <Link href={`/auth/signup${redirect !== "/" ? `?redirect=${encodeURIComponent(redirect)}` : ""}`} className="text-foreground hover:underline">
               Sign up
             </Link>
           </p>
@@ -119,8 +119,8 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] flex items-center justify-center p-4">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="text-foreground">Loading...</div>
       </div>
     }>
       <LoginForm />

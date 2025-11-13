@@ -36,12 +36,12 @@ function LandingPageContent() {
   // Show loading state while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-2xl p-3 animate-pulse">
             <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
           </div>
-          <p className="text-gray-400">Loading...</p>
+          <p className="text-text-secondary">Loading...</p>
         </div>
       </div>
     );
@@ -76,12 +76,12 @@ function LandingPageContent() {
 export default function LandingPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-2xl p-3 animate-pulse">
             <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
           </div>
-          <p className="text-gray-400">Loading...</p>
+          <p className="text-text-secondary">Loading...</p>
         </div>
       </div>
     }>

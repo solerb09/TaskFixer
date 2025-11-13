@@ -9,6 +9,7 @@ export type Json =
 export type SubscriptionTier = 'free_trial' | 'educator' | 'school'
 export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'incomplete'
 export type BillingInterval = 'month' | 'year'
+export type ThemePreference = 'light' | 'dark'
 
 export interface Database {
   public: {
@@ -25,6 +26,7 @@ export interface Database {
           stripe_subscription_id: string | null
           billing_interval: BillingInterval | null
           subscription_ends_at: string | null
+          theme_preference: ThemePreference
           created_at: string
           updated_at: string
         }
@@ -39,6 +41,7 @@ export interface Database {
           stripe_subscription_id?: string | null
           billing_interval?: BillingInterval | null
           subscription_ends_at?: string | null
+          theme_preference?: ThemePreference
           created_at?: string
           updated_at?: string
         }
@@ -53,6 +56,7 @@ export interface Database {
           stripe_subscription_id?: string | null
           billing_interval?: BillingInterval | null
           subscription_ends_at?: string | null
+          theme_preference?: ThemePreference
           created_at?: string
           updated_at?: string
         }
