@@ -14,6 +14,42 @@ interface Chat {
 }
 
 /**
+ * Remove conversational endings from content (PDF button reminders, etc.)
+ */
+const removeConversationalEndings = (content: string): string => {
+  const lines = content.split('\n');
+  const cleanedLines: string[] = [];
+
+  for (const line of lines) {
+    const lowerLine = line.toLowerCase().trim();
+
+    // Skip lines that are conversational reminders about the PDF button
+    if (lowerLine.includes('download') && lowerLine.includes('pdf') && lowerLine.includes('button')) {
+      continue;
+    }
+    if (lowerLine.includes('you can download') || lowerLine.includes('use the "download pdf"')) {
+      continue;
+    }
+    if (lowerLine.includes('your redesign is complete') && lowerLine.includes('download')) {
+      continue;
+    }
+    if (lowerLine.includes('click the button above') || lowerLine.includes('button above')) {
+      continue;
+    }
+    if (lowerLine.includes('let me know if you') && lowerLine.includes('further adjustments')) {
+      continue;
+    }
+    if (lowerLine.includes('let me know if you need') && lowerLine.includes('changes')) {
+      continue;
+    }
+
+    cleanedLines.push(line);
+  }
+
+  return cleanedLines.join('\n');
+};
+
+/**
  * Export the final assignment/redesign to PDF format (student-ready version)
  * @param chat - The chat object containing the assignment redesign
  */
@@ -111,6 +147,9 @@ export const exportChatToPDF = (chat: Chat) => {
 
   // Get content from Project Overview onward
   contentWithoutTitle = lines.slice(contentStartIndex).join('\n');
+
+  // Remove conversational endings (PDF button reminders, etc.)
+  contentWithoutTitle = removeConversationalEndings(contentWithoutTitle);
 
   // Helper function to check if we need a new page
   const checkPageBreak = (requiredSpace: number) => {
