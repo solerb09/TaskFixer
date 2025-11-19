@@ -120,7 +120,7 @@ export default function AccountPage() {
             </div>
             <span className="text-xl font-semibold">TaskFixerAI</span>
           </Link>
-          <Link href="/" className="text-sm text-text-secondary hover:text-foreground transition-colors">
+          <Link href="/chat" className="text-sm text-text-secondary hover:text-foreground transition-colors">
             Back to Chat
           </Link>
         </div>

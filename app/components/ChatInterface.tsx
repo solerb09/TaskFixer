@@ -29,6 +29,7 @@ export default function ChatInterface() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [deleteConfirmChatId, setDeleteConfirmChatId] = useState<string | null>(null);
+  const [showPDFButton, setShowPDFButton] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -42,6 +43,22 @@ export default function ChatInterface() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [selectedChat?.messages]);
+
+  // Separate effect to check for redesign completion when switching chats
+  useEffect(() => {
+    // Only check when switching to a different chat (not during active streaming)
+    if (!isLoading && selectedChat && selectedChat.messages.length > 0) {
+      const lastAssistantMessage = [...selectedChat.messages]
+        .reverse()
+        .find(msg => msg.role === 'assistant');
+
+      if (lastAssistantMessage && isRedesignComplete(lastAssistantMessage.content)) {
+        setShowPDFButton(true);
+      } else {
+        setShowPDFButton(false);
+      }
+    }
+  }, [selectedChatId]); // Only run when chat selection changes
 
   // Load chat history from Supabase
   const loadChatHistory = async () => {
@@ -99,8 +116,6 @@ export default function ChatInterface() {
   // Save chat to Supabase (filters out files)
   const saveChatToSupabase = async (chat: Chat) => {
     try {
-      console.log("🔵 Attempting to save chat:", chat.id, "with", chat.messages.length, "messages");
-
       // Filter out files from messages before saving
       const cleanMessages = chat.messages.map(msg => ({
         role: msg.role,
@@ -120,12 +135,9 @@ export default function ChatInterface() {
         }),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("✅ Chat saved successfully:", data);
-      } else {
-        console.error("❌ Failed to save chat:", data);
+      if (!response.ok) {
+        const data = await response.json();
+        console.error("Failed to save chat:", data.error || "Unknown error");
       }
     } catch (error) {
       console.error("Error saving chat:", error);
@@ -206,6 +218,50 @@ export default function ChatInterface() {
     ];
 
     return exportPatterns.some(pattern => lowerMessage.includes(pattern));
+  };
+
+  // Detect if assistant has completed a redesign
+  const isRedesignComplete = (content: string): boolean => {
+    if (!content) return false;
+
+    const lowerContent = content.toLowerCase();
+
+    // Check for assignment-related headers/keywords (more flexible)
+    const hasAssignmentIndicators =
+      content.includes('# ') || // Has markdown headers
+      lowerContent.includes('assignment') ||
+      lowerContent.includes('project title') ||
+      lowerContent.includes('project:') ||
+      lowerContent.includes('project idea') ||
+      lowerContent.includes('redesign');
+
+    // Check for completion/conclusion markers (more comprehensive)
+    const completionMarkers = [
+      'here is',
+      'here\'s',
+      'redesigned',
+      'completed',
+      'ready for',
+      'assignment for',
+      'updated assignment',
+      'revised assignment',
+      'let\'s create',
+      'i\'ve created',
+      'i\'ve redesigned',
+      'i\'ve updated',
+      'created a project',
+      'created an assignment'
+    ];
+
+    const hasCompletionMarker = completionMarkers.some(marker =>
+      lowerContent.includes(marker)
+    );
+
+    const isLongEnough = content.length > 500;
+
+    // Must have both: assignment indicators AND completion markers
+    // Plus a reasonable length (suggests a full redesign, not just a question)
+    return hasAssignmentIndicators && hasCompletionMarker && isLongEnough;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -511,6 +567,7 @@ export default function ChatInterface() {
     );
 
     setIsLoading(true);
+    setShowPDFButton(false); // Hide button when starting a new request
 
     // Call OpenAI Assistants API with thread ID
     try {
@@ -628,6 +685,11 @@ export default function ChatInterface() {
             chat.id === selectedChatId ? { ...chat, threadId: receivedThreadId } : chat
           )
         );
+      }
+
+      // Check if redesign is complete and show PDF button
+      if (accumulatedContent && isRedesignComplete(accumulatedContent)) {
+        setShowPDFButton(true);
       }
 
       // Save chat to Supabase after assistant responds
@@ -867,6 +929,62 @@ export default function ChatInterface() {
                   </div>
                 );
               })}
+
+              {/* PDF Download Button - Shows when redesign is complete */}
+              {showPDFButton && selectedChat && (
+                <div className="mb-8 flex justify-center">
+                  <button
+                    onClick={async () => {
+                      try {
+                        // Track PDF download and check limits
+                        const response = await fetch("/api/download-pdf", {
+                          method: "POST",
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                          alert(data.error || "Failed to download PDF");
+                          return;
+                        }
+
+                        // Generate and download PDF
+                        await exportChatToPDF(selectedChat);
+
+                        // Hide button after successful download
+                        setShowPDFButton(false);
+
+                        // Add confirmation message
+                        setChats((prev) =>
+                          prev.map((chat) =>
+                            chat.id === selectedChatId
+                              ? {
+                                  ...chat,
+                                  messages: [
+                                    ...chat.messages,
+                                    {
+                                      role: "assistant",
+                                      content: "✓ Your assignment has been downloaded as a PDF! Check your Downloads folder.",
+                                    },
+                                  ],
+                                }
+                              : chat
+                          )
+                        );
+                      } catch (error) {
+                        console.error("Error downloading PDF:", error);
+                        alert("Failed to download PDF. Please try again.");
+                      }
+                    }}
+                    className="flex items-center gap-3 px-6 py-3 bg-brand-purple hover:bg-brand-purple/90 text-white rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span className="font-medium">Download PDF</span>
+                  </button>
+                </div>
+              )}
 
               {isLoading && (
                 <div className="mb-8">

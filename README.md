@@ -78,7 +78,7 @@ OPENAI_MODEL=gpt-4-turbo-preview
 
 ## 🔗 Embedding in Lovable
 
-Once deployed to Vercel, you'll get a URL like: `https://your-app.vercel.app`
+Once deployed to Vercel, your app is available at: `https://taskfixer.ai`
 
 ### Embed Code for Lovable
 
@@ -86,7 +86,7 @@ Add this to a Custom HTML block in Lovable:
 
 ```html
 <iframe
-  src="https://your-app.vercel.app"
+  src="https://taskfixer.ai"
   width="100%"
   height="600px"
   style="border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
@@ -101,7 +101,7 @@ For a better mobile experience:
 ```html
 <div style="position: relative; width: 100%; padding-bottom: 75%; max-width: 800px; margin: 0 auto;">
   <iframe
-    src="https://your-app.vercel.app"
+    src="https://taskfixer.ai"
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
     title="TaskFixerAI Chat"
   ></iframe>
