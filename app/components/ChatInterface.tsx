@@ -249,8 +249,17 @@ export default function ChatInterface() {
       'i\'ve created',
       'i\'ve redesigned',
       'i\'ve updated',
+      'i\'ve added',
+      'i\'ve enhanced',
+      'i\'ve revised',
+      'i\'ve modified',
       'created a project',
-      'created an assignment'
+      'created an assignment',
+      'updated the assignment',
+      'revised the assignment',
+      'complete revised version',
+      'complete updated version',
+      'here\'s the complete'
     ];
 
     const hasCompletionMarker = completionMarkers.some(marker =>
@@ -567,7 +576,7 @@ export default function ChatInterface() {
     );
 
     setIsLoading(true);
-    setShowPDFButton(false); // Hide button when starting a new request
+    // Don't hide button here - let detection logic handle it after response
 
     // Call OpenAI Assistants API with thread ID
     try {
@@ -687,9 +696,15 @@ export default function ChatInterface() {
         );
       }
 
-      // Check if redesign is complete and show PDF button
-      if (accumulatedContent && isRedesignComplete(accumulatedContent)) {
-        setShowPDFButton(true);
+      // Check if redesign is complete and show/hide PDF button accordingly
+      if (accumulatedContent) {
+        if (isRedesignComplete(accumulatedContent)) {
+          setShowPDFButton(true);
+        } else if (accumulatedContent.length > 200) {
+          // If it's a substantial response but NOT a redesign, hide the button
+          // (Don't hide for very short responses like "Sure!" or "What would you like?")
+          setShowPDFButton(false);
+        }
       }
 
       // Save chat to Supabase after assistant responds
