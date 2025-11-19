@@ -27,6 +27,7 @@ export default function ChatInterface() {
   const [isUploading, setIsUploading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [deleteConfirmChatId, setDeleteConfirmChatId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -68,6 +69,7 @@ export default function ChatInterface() {
   // Load messages for a specific chat
   const loadChatMessages = async (chatId: string) => {
     try {
+      setIsLoadingMessages(true);
       const response = await fetch(`/api/chat-history/${chatId}`);
 
       if (response.ok) {
@@ -89,6 +91,8 @@ export default function ChatInterface() {
       }
     } catch (error) {
       console.error("Error loading chat messages:", error);
+    } finally {
+      setIsLoadingMessages(false);
     }
   };
 
@@ -749,8 +753,8 @@ export default function ChatInterface() {
           </svg>
         </button>
 
-        {!selectedChat || selectedChat.messages.length === 0 ? (
-          // Empty State - Show for new chats with no messages
+        {!selectedChat ? (
+          // Empty State - Show only when no chat is selected
           <div className="flex-1 flex items-center justify-center overflow-y-auto">
             <div className="text-center max-w-2xl px-4 py-8">
               <div className="w-20 h-20 mx-auto mb-6 bg-white rounded-2xl p-4">
@@ -781,6 +785,14 @@ export default function ChatInterface() {
                   </p>
                 </button>
               </div>
+            </div>
+          </div>
+        ) : isLoadingMessages ? (
+          // Loading messages state
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-8 h-8 border-3 border-brand-purple border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-sm text-text-secondary">Loading messages...</p>
             </div>
           </div>
         ) : (

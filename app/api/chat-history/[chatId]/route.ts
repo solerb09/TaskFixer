@@ -7,7 +7,7 @@ type ChatSession = Database['public']['Tables']['chat_sessions']['Row'];
 // GET /api/chat-history/[chatId] - Load a specific chat with all messages
 export async function GET(
   req: NextRequest,
-  { params }: { params: { chatId: string } }
+  { params }: { params: Promise<{ chatId: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -22,7 +22,7 @@ export async function GET(
       );
     }
 
-    const { chatId } = params;
+    const { chatId } = await params;
 
     // Fetch the chat session
     const { data: session, error: sessionError } = await supabase
@@ -79,7 +79,7 @@ export async function GET(
 // DELETE /api/chat-history/[chatId] - Delete a chat (hard delete)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { chatId: string } }
+  { params }: { params: Promise<{ chatId: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -94,7 +94,7 @@ export async function DELETE(
       );
     }
 
-    const { chatId } = params;
+    const { chatId } = await params;
 
     // Delete the chat session (messages will be cascade deleted)
     const { error } = await supabase
