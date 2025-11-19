@@ -96,32 +96,20 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Column: Classroom Image */}
+          {/* Right Column: YouTube Video */}
           <div
-            className="relative h-[300px] md:h-[400px] lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[40%] lg:h-full order-2"
-            style={{
-              backgroundImage: 'url(/hero-classroom.png)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
+            className="relative h-[400px] md:h-[500px] lg:h-[580px] order-2 flex items-center justify-center lg:justify-end px-4 lg:px-6"
           >
-            {/* Gradient overlay for brand blending */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  'linear-gradient(to right, rgba(142, 90, 233, 0.25) 0%, rgba(255, 255, 255, 0) 100%)',
-              }}
-            />
-            {/* Subtle vignette */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  'radial-gradient(circle at center, transparent 50%, rgba(0, 0, 0, 0.05) 100%)',
-              }}
-            />
+            <div className="w-full aspect-video">
+              <iframe
+                className="w-full h-full rounded-xl shadow-2xl"
+                src="https://www.youtube.com/embed/YL4tGXECU1I"
+                title="TaskFixerAI Demo"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
       </div>

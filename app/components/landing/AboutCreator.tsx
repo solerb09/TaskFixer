@@ -7,11 +7,11 @@ const AboutCreator = () => {
         </h2>
 
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-          <div>
+          <div className="-mt-80">
             <img
               src="/dr-jones.jpg"
               alt="Dr. Jamiylah Jones, founder of TaskFixerAI and CEO of Creative Transformations"
-              className="rounded-lg shadow-xl w-full max-w-md mx-auto"
+              className="rounded-lg shadow-xl w-full max-w-lg mx-auto"
             />
           </div>
 

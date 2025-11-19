@@ -26,13 +26,6 @@ function LandingPageContent() {
   const canceled = searchParams.get('canceled');
   const success = searchParams.get('success');
 
-  useEffect(() => {
-    // If user is already authenticated, redirect to chat
-    if (!loading && user) {
-      router.push('/chat');
-    }
-  }, [user, loading, router]);
-
   // Show loading state while checking auth
   if (loading) {
     return (
@@ -47,14 +40,10 @@ function LandingPageContent() {
     );
   }
 
-  // Only show landing page if user is not authenticated
-  if (user) {
-    return null; // Will redirect via useEffect
-  }
-
+  // Show landing page for both authenticated and non-authenticated users
   return (
     <div className="min-h-screen">
-      <Header />
+      <Header isLoggedIn={!!user} />
       <main>
         <Hero />
         <ProblemSection />

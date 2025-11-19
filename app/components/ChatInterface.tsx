@@ -158,13 +158,8 @@ export default function ChatInterface() {
   };
 
   const createNewChat = () => {
-    const newChat: Chat = {
-      id: crypto.randomUUID(), // Generate proper UUID
-      title: "New chat",
-      messages: [],
-    };
-    setChats((prev) => [newChat, ...prev]);
-    setSelectedChatId(newChat.id);
+    // Clear selection first to show empty state
+    setSelectedChatId(null);
   };
 
   const handleConversationStarter = (message: string) => {
@@ -676,6 +671,19 @@ export default function ChatInterface() {
           <ProfileMenu />
         </div>
 
+        {/* Home Link */}
+        <div className="p-3 border-b border-border-default">
+          <a
+            href="/"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary-bg transition-colors text-sm text-text-secondary hover:text-foreground"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span>Back to Home</span>
+          </a>
+        </div>
+
         {/* New Chat Button */}
         <div className="p-3">
           <button
@@ -753,8 +761,8 @@ export default function ChatInterface() {
           </svg>
         </button>
 
-        {!selectedChat ? (
-          // Empty State - Show only when no chat is selected
+        {!selectedChat || selectedChat.messages.length === 0 ? (
+          // Empty State - Show when no chat is selected or selected chat has no messages
           <div className="flex-1 flex items-center justify-center overflow-y-auto">
             <div className="text-center max-w-2xl px-4 py-8">
               <div className="w-20 h-20 mx-auto mb-6 bg-white rounded-2xl p-4">

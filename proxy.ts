@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Auth is handled by ProtectedRoute component on client side
-  // This middleware is simplified to avoid Edge Runtime compatibility issues
+  // This proxy is simplified to avoid Edge Runtime compatibility issues
   return NextResponse.next()
 }
 

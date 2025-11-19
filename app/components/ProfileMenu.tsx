@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { IconThemeToggle } from "./IconThemeToggle";
 
 export default function ProfileMenu() {
   const { profile, signOut } = useAuth();
@@ -37,20 +38,23 @@ export default function ProfileMenu() {
 
   return (
     <div className="relative" ref={menuRef}>
-      {/* Profile Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-secondary-bg transition-colors"
-      >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-purple to-brand-cyan flex items-center justify-center text-white text-sm font-semibold">
-          {getInitials(profile?.full_name)}
-        </div>
-        <div className="text-left hidden sm:block">
-          <div className="text-sm font-medium text-foreground truncate max-w-[150px]">
-            {profile?.full_name || "User"}
+      {/* Profile Button with Theme Toggle */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-secondary-bg transition-colors flex-1"
+        >
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-purple to-brand-cyan flex items-center justify-center text-white text-sm font-semibold">
+            {getInitials(profile?.full_name)}
           </div>
-        </div>
-      </button>
+          <div className="text-left hidden sm:block">
+            <div className="text-sm font-medium text-foreground truncate max-w-[150px]">
+              {profile?.full_name || "User"}
+            </div>
+          </div>
+        </button>
+        <IconThemeToggle />
+      </div>
 
       {/* Dropdown Menu */}
       {isOpen && (

@@ -4,7 +4,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ThemeToggle } from "../components/ThemeToggle";
 
 export default function AccountPage() {
   const { user, profile, usage, loading, signOut } = useAuth();
@@ -130,11 +129,6 @@ export default function AccountPage() {
       <div className="max-w-5xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold mb-2">Account Settings</h1>
         <p className="text-text-secondary mb-8">Manage your subscription and view usage</p>
-
-        {/* Theme Toggle */}
-        <div className="mb-6">
-          <ThemeToggle />
-        </div>
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Profile Card */}
