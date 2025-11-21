@@ -80,8 +80,9 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="you@example.com"
+                style={{ fontSize: "16px" }}
               />
             </div>
 
@@ -100,8 +101,9 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="••••••••"
+                style={{ fontSize: "16px" }}
               />
             </div>
 

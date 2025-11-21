@@ -110,8 +110,9 @@ function SignupForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="Jane Doe"
+                style={{ fontSize: "16px" }}
               />
             </div>
 
@@ -125,8 +126,9 @@ function SignupForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="you@example.com"
+                style={{ fontSize: "16px" }}
               />
             </div>
 
@@ -140,8 +142,9 @@ function SignupForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="••••••••"
+                style={{ fontSize: "16px" }}
               />
               <p className="text-xs text-text-tertiary mt-1">Must be at least 6 characters</p>
             </div>

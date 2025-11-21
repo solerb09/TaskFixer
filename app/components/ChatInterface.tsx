@@ -1098,11 +1098,12 @@ export default function ChatInterface() {
                     }
                   }}
                   placeholder="Message TaskFixerAI..."
-                  className="w-full bg-secondary-bg rounded-xl px-4 py-3 pl-12 pr-12 resize-none focus:outline-none focus:ring-1 focus:ring-border-hover placeholder-text-tertiary text-foreground text-sm sm:text-base"
+                  className="w-full bg-secondary-bg rounded-xl px-4 py-3 pl-12 pr-12 resize-none focus:outline-none focus:ring-1 focus:ring-border-hover placeholder-text-tertiary text-foreground text-base"
                   rows={1}
                   style={{
                     minHeight: "48px",
                     maxHeight: "200px",
+                    fontSize: "16px",
                   }}
                   disabled={isLoading || isUploading}
                 />
