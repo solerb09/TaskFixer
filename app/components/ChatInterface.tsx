@@ -872,8 +872,8 @@ export default function ChatInterface() {
 
         {!selectedChat || selectedChat.messages.length === 0 ? (
           // Empty State - Show when no chat is selected or selected chat has no messages
-          <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">
-            <div className="text-center max-w-2xl py-8 sm:py-8">
+          <div className="flex-1 flex items-start sm:items-center justify-center overflow-y-auto px-4 pt-12 sm:pt-0">
+            <div className="text-center max-w-2xl py-4 sm:py-8">
               <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-6 bg-white rounded-2xl p-2.5 sm:p-4">
                 <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
               </div>
@@ -1058,8 +1058,8 @@ export default function ChatInterface() {
           </div>
         )}
 
-        {/* Input Area - Always visible */}
-        <div className="border-t border-border-default p-3 sm:p-4">
+        {/* Input Area - Always visible - extra bottom padding on mobile for iOS safe area */}
+        <div className="border-t border-border-default p-3 sm:p-4 pb-8 sm:pb-4" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
           <div className="max-w-3xl mx-auto">
             {/* Uploaded Files Display */}
             {uploadedFiles.length > 0 && (
