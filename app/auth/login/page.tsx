@@ -39,12 +39,12 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
         {/* Back to Home Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-foreground transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-foreground transition-colors mb-4 sm:mb-6"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -53,19 +53,19 @@ function LoginForm() {
         </Link>
 
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-2xl p-3">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-white rounded-2xl p-2.5 sm:p-3">
             <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
           </div>
-          <h1 className="text-2xl font-semibold mb-2">Welcome back</h1>
-          <p className="text-text-secondary">Sign in to your TaskFixerAI account</p>
+          <h1 className="text-xl sm:text-2xl font-semibold mb-2">Welcome back</h1>
+          <p className="text-sm sm:text-base text-text-secondary">Sign in to your TaskFixerAI account</p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-primary-bg border border-border-default rounded-2xl p-8">
+        <div className="bg-primary-bg border border-border-default rounded-2xl p-5 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-sm text-red-400">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-xs sm:text-sm text-red-400">
                 {error}
               </div>
             )}
@@ -80,7 +80,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="you@example.com"
               />
             </div>
@@ -90,7 +90,7 @@ function LoginForm() {
                 <label htmlFor="password" className="block text-sm font-medium">
                   Password
                 </label>
-                <Link href="/auth/forgot-password" className="text-sm text-text-secondary hover:text-foreground transition-colors">
+                <Link href="/auth/forgot-password" className="text-xs sm:text-sm text-text-secondary hover:text-foreground transition-colors">
                   Forgot password?
                 </Link>
               </div>
@@ -100,7 +100,7 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
+                className="w-full bg-secondary-bg border border-border-default rounded-lg px-4 py-3 text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-brand-purple/50 placeholder-text-tertiary"
                 placeholder="••••••••"
               />
             </div>
@@ -108,14 +108,14 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-brand-purple text-white font-medium py-3 rounded-lg hover:bg-brand-purple-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-brand-purple text-white font-medium py-3 rounded-lg hover:bg-brand-purple-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
           {/* Sign Up Link */}
-          <p className="text-center text-sm text-text-secondary mt-6">
+          <p className="text-center text-xs sm:text-sm text-text-secondary mt-5 sm:mt-6">
             Don't have an account?{" "}
             <Link href={`/auth/signup${redirect !== "/" ? `?redirect=${encodeURIComponent(redirect)}` : ""}`} className="text-foreground hover:underline">
               Sign up

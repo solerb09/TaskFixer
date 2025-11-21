@@ -6,10 +6,10 @@ const ProblemSection = () => {
   };
 
   return (
-    <section className="bg-gray-100 py-20">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
+    <section className="bg-gray-100 py-12 sm:py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
+          <div className="order-2 md:order-1">
             <img
               src="/problem-section.jpg"
               alt="Teacher reviewing repeated student work with concern"
@@ -17,12 +17,12 @@ const ProblemSection = () => {
             />
           </div>
 
-          <div>
-            <h2 className="font-bold text-4xl md:text-5xl text-gray-900 mb-6">
+          <div className="order-1 md:order-2">
+            <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-900 mb-4 sm:mb-5 md:mb-6">
               AI Has Changed the Rules of Teaching.
             </h2>
 
-            <div className="space-y-4 text-lg text-gray-700">
+            <div className="space-y-3 sm:space-y-4 text-sm sm:text-base md:text-lg text-gray-700">
               <p>
                 Teachers and professors everywhere are facing a new reality. AI
                 can generate perfect answers in seconds. Students can bypass
@@ -47,7 +47,7 @@ const ProblemSection = () => {
 
             <button
               onClick={scrollToHowItWorks}
-              className="mt-8 bg-[#E6B400] hover:bg-[#F0C020] text-[#8E5AE9] font-bold text-lg px-9 py-4 rounded-[10px] transition-all duration-300 uppercase"
+              className="mt-6 sm:mt-8 bg-[#E6B400] hover:bg-[#F0C020] text-[#8E5AE9] font-bold text-sm sm:text-base md:text-lg px-6 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-[10px] transition-all duration-300 uppercase"
             >
               See How It Works →
             </button>

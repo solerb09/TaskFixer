@@ -32,35 +32,65 @@ const ComparisonTable = () => {
   ];
 
   return (
-    <section className="bg-white py-20">
-      <div className="container mx-auto px-4">
-        <h2 className="font-bold text-4xl md:text-5xl text-center text-gray-900 mb-12">
+    <section className="bg-white py-12 sm:py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6">
+        <h2 className="font-bold text-xl sm:text-2xl md:text-4xl lg:text-5xl text-center text-gray-900 mb-8 sm:mb-10 md:mb-12">
           See how TaskFixerAI transforms assignments and teaches responsible AI
           use.
         </h2>
 
-        <div className="overflow-x-auto">
+        {/* Mobile card layout */}
+        <div className="md:hidden space-y-6">
+          {comparisons.map((row, index) => (
+            <div key={index} className="bg-gray-50 rounded-lg overflow-hidden">
+              <div className="p-4 border-b border-gray-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-5 h-5 text-gray-600" />
+                  <span className="font-semibold text-sm text-gray-900">Before</span>
+                </div>
+                <p className="text-sm text-gray-900">{row.before}</p>
+              </div>
+              <div className="p-4 bg-yellow-50 border-b border-gray-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Lightbulb className="w-5 h-5 text-[#E6B400]" />
+                  <span className="font-semibold text-sm text-gray-900">After</span>
+                </div>
+                <p className="text-sm text-gray-900">{row.after}</p>
+              </div>
+              <div className="p-4 bg-blue-50">
+                <div className="flex items-center gap-2 mb-2">
+                  <Laptop className="w-5 h-5 text-[#4FC3F7]" />
+                  <span className="font-semibold text-sm text-gray-900">Responsible AI</span>
+                </div>
+                <p className="text-sm text-gray-900">{row.responsibleAI}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table layout */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-100">
-                <th className="p-6 text-left">
-                  <div className="flex items-center gap-3">
-                    <FileText className="w-6 h-6 text-gray-600" />
-                    <span className="font-semibold text-lg text-gray-900">Before</span>
+                <th className="p-4 lg:p-6 text-left">
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <FileText className="w-5 h-5 lg:w-6 lg:h-6 text-gray-600" />
+                    <span className="font-semibold text-base lg:text-lg text-gray-900">Before</span>
                   </div>
                 </th>
-                <th className="p-6 text-left">
-                  <div className="flex items-center gap-3">
-                    <Lightbulb className="w-6 h-6 text-[#E6B400]" />
-                    <span className="font-semibold text-lg text-gray-900">
+                <th className="p-4 lg:p-6 text-left">
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <Lightbulb className="w-5 h-5 lg:w-6 lg:h-6 text-[#E6B400]" />
+                    <span className="font-semibold text-base lg:text-lg text-gray-900">
                       After (TaskFixerAI Redesign)
                     </span>
                   </div>
                 </th>
-                <th className="p-6 text-left">
-                  <div className="flex items-center gap-3">
-                    <Laptop className="w-6 h-6 text-[#4FC3F7]" />
-                    <span className="font-semibold text-lg text-gray-900">
+                <th className="p-4 lg:p-6 text-left">
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <Laptop className="w-5 h-5 lg:w-6 lg:h-6 text-[#4FC3F7]" />
+                    <span className="font-semibold text-base lg:text-lg text-gray-900">
                       Responsible AI Use
                     </span>
                   </div>
@@ -70,9 +100,9 @@ const ComparisonTable = () => {
             <tbody>
               {comparisons.map((row, index) => (
                 <tr key={index} className="border-b border-gray-200">
-                  <td className="p-6 text-gray-900">{row.before}</td>
-                  <td className="p-6 text-gray-900 bg-yellow-50">{row.after}</td>
-                  <td className="p-6 text-gray-900 bg-blue-50">
+                  <td className="p-4 lg:p-6 text-sm lg:text-base text-gray-900">{row.before}</td>
+                  <td className="p-4 lg:p-6 text-sm lg:text-base text-gray-900 bg-yellow-50">{row.after}</td>
+                  <td className="p-4 lg:p-6 text-sm lg:text-base text-gray-900 bg-blue-50">
                     {row.responsibleAI}
                   </td>
                 </tr>
@@ -81,17 +111,17 @@ const ComparisonTable = () => {
           </table>
         </div>
 
-        <div className="mt-10 p-6 bg-yellow-50 border-l-4 border-[#E6B400] rounded">
-          <p className="text-lg text-gray-900 font-semibold">
+        <div className="mt-6 sm:mt-8 md:mt-10 p-4 sm:p-5 md:p-6 bg-yellow-50 border-l-4 border-[#E6B400] rounded">
+          <p className="text-sm sm:text-base md:text-lg text-gray-900 font-semibold">
             TaskFixerAI builds deeper learning while showing students how to use
             AI to question, verify, and think, not to copy.
           </p>
         </div>
 
-        <div className="text-center mt-8">
+        <div className="text-center mt-6 sm:mt-8">
           <button
             onClick={scrollToHowItWorks}
-            className="bg-gradient-to-r from-[#A855F7] via-[#F97316] to-[#FBBF24] text-white font-bold text-lg px-9 py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
+            className="bg-gradient-to-r from-[#A855F7] via-[#F97316] to-[#FBBF24] text-white font-bold text-sm sm:text-base md:text-lg px-6 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
           >
             Upload Your Assignment →
           </button>
