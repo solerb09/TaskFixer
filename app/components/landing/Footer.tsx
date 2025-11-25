@@ -1,4 +1,3 @@
-import { Linkedin, Youtube, Instagram } from 'lucide-react';
 import LegalNotice from './LegalNotice';
 
 const Footer = () => {
@@ -40,34 +39,10 @@ const Footer = () => {
           </a>
           <span className="text-white/40 hidden sm:inline">|</span>
           <a
-            href="mailto:info@creativetransformations.consulting"
+            href="mailto:info@taskfixer.ai"
             className="text-white/80 hover:text-white transition-colors text-xs sm:text-sm md:text-base break-all sm:break-normal"
           >
-            Contact: info@creativetransformations.consulting
-          </a>
-        </div>
-
-        <div className="flex justify-center gap-4 sm:gap-5 md:gap-6">
-          <a
-            href="#linkedin"
-            className="w-9 h-9 sm:w-10 sm:h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-            aria-label="LinkedIn"
-          >
-            <Linkedin className="w-4 h-4 sm:w-5 sm:h-5" />
-          </a>
-          <a
-            href="#youtube"
-            className="w-9 h-9 sm:w-10 sm:h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-            aria-label="YouTube"
-          >
-            <Youtube className="w-4 h-4 sm:w-5 sm:h-5" />
-          </a>
-          <a
-            href="#instagram"
-            className="w-9 h-9 sm:w-10 sm:h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-            aria-label="Instagram"
-          >
-            <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
+            Contact: info@taskfixer.ai
           </a>
         </div>
 

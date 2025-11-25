@@ -54,18 +54,6 @@ const Hero = () => {
                 and assessments into cheat-resistant, high-rigor learning tasks
                 while teaching students to use AI responsibly.
               </p>
-              <p
-                className="text-sm sm:text-[13px] md:text-[13px] lg:text-[15px] text-white mb-4 sm:mb-3 leading-relaxed"
-                style={{
-                  textShadow: '0 1px 1px rgba(0, 0, 0, 0.3)',
-                }}
-              >
-                AI is not the enemy. It is an opportunity to rethink learning.
-                TaskFixerAI helps teachers, professors, and instructional
-                leaders redesign assignments that make students think deeper,
-                apply knowledge, and develop original work, not copy what AI
-                gives them.
-              </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-3 pt-3 sm:pt-2 justify-center px-2 sm:px-0">
@@ -100,7 +88,7 @@ const Hero = () => {
             <div className="w-full aspect-video">
               <iframe
                 className="w-full h-full rounded-xl shadow-2xl"
-                src="https://www.youtube.com/embed/YL4tGXECU1I"
+                src="https://www.youtube.com/embed/IfVU-uHJap0?si=cbNsIb3AmJ3hjUYE"
                 title="TaskFixerAI Demo"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

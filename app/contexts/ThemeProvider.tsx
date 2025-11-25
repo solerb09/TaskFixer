@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { user, profile } = useAuth()
-  const [theme, setThemeState] = useState<ThemePreference>('dark')
+  const [theme, setThemeState] = useState<ThemePreference>('light')
   const [loading, setLoading] = useState(true)
 
   // Load theme from user profile or localStorage
@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           setThemeState(savedTheme)
           applyTheme(savedTheme)
         } else {
-          applyTheme('dark')
+          applyTheme('light')
         }
       }
       setLoading(false)
