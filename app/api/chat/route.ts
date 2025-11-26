@@ -13,19 +13,7 @@ const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID;
 
 export async function POST(req: NextRequest) {
   try {
-    // Check authentication
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized. Please log in." }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
+    // Parse request body first
     const { message, threadId, fileIds } = await req.json();
 
     if ((!message || typeof message !== 'string') && (!fileIds || fileIds.length === 0)) {
@@ -42,8 +30,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check usage limits
-    const usageCheck = await checkUsageLimit(user.id);
+    // OPTIMIZATION: Parallelize all database queries
+    const supabase = await createClient();
+    const [
+      { data: { user } },
+      // We'll check usage and get profile after auth succeeds
+    ] = await Promise.all([
+      supabase.auth.getUser(),
+    ]);
+
+    if (!user) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized. Please log in." }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // OPTIMIZATION: Parallelize usage check and profile fetch
+    const [usageCheck, { data: profile }] = await Promise.all([
+      checkUsageLimit(user.id),
+      supabase
+        .from('users')
+        .select('subscription_tier')
+        .eq('id', user.id)
+        .single<{ subscription_tier: Database['public']['Tables']['users']['Row']['subscription_tier'] }>()
+    ]);
+
     if (!usageCheck.canUse) {
       return new Response(
         JSON.stringify({
@@ -55,13 +67,6 @@ export async function POST(req: NextRequest) {
         { status: 403, headers: { 'Content-Type': 'application/json' } }
       );
     }
-
-    // Get user profile for feature access
-    const { data: profile } = await supabase
-      .from('users')
-      .select('subscription_tier')
-      .eq('id', user.id)
-      .single<{ subscription_tier: Database['public']['Tables']['users']['Row']['subscription_tier'] }>();
 
     const features = profile ? getFeatureAccess(profile.subscription_tier) : getFeatureAccess('free_trial');
 
@@ -156,24 +161,28 @@ export async function POST(req: NextRequest) {
           });
 
           stream.on('end', async () => {
-            // Track usage after successful completion
-            try {
-              if (fullTextContent) {
-                // Track word count for free trial limits (800 words)
-                const wordCount = countWords(fullTextContent);
-                await addWordCount(user.id, wordCount);
+            // OPTIMIZATION: Track usage in background (don't await)
+            // This allows the stream to close immediately without waiting for DB writes
+            if (fullTextContent) {
+              // Fire and forget - track asynchronously
+              (async () => {
+                try {
+                  // Track word count for free trial limits (800 words)
+                  const wordCount = countWords(fullTextContent);
+                  await addWordCount(user.id, wordCount);
 
-                // Increment file count if files were uploaded (only on first message with files)
-                if (fileIds && fileIds.length > 0) {
-                  await incrementFileCount(user.id, fileIds.length);
+                  // Increment file count if files were uploaded (only on first message with files)
+                  if (fileIds && fileIds.length > 0) {
+                    await incrementFileCount(user.id, fileIds.length);
+                  }
+
+                  // Note: PDF redesign count is NOT incremented here
+                  // It should only be incremented when user actually downloads a PDF
+                } catch (trackingError) {
+                  console.error('Error tracking usage:', trackingError);
+                  // Silent fail - don't impact user experience
                 }
-
-                // Note: PDF redesign count is NOT incremented here
-                // It should only be incremented when user actually downloads a PDF
-              }
-            } catch (trackingError) {
-              console.error('Error tracking usage:', trackingError);
-              // Don't fail the request if tracking fails
+              })();
             }
 
             safeEnqueue(`data: [DONE]\n\n`);
