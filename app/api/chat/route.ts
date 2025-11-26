@@ -11,6 +11,42 @@ const openai = new OpenAI({
 
 const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID;
 
+// PHASE 2 OPTIMIZATION: In-memory profile cache
+// Cache user profiles to avoid DB queries on every message
+type SubscriptionTier = Database['public']['Tables']['users']['Row']['subscription_tier'];
+interface CachedProfile {
+  subscriptionTier: SubscriptionTier;
+  timestamp: number;
+}
+
+const profileCache = new Map<string, CachedProfile>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
+
+function getCachedProfile(userId: string): SubscriptionTier | null {
+  const cached = profileCache.get(userId);
+  if (!cached) return null;
+
+  // Check if cache is still valid
+  if (Date.now() - cached.timestamp > CACHE_TTL) {
+    profileCache.delete(userId);
+    return null;
+  }
+
+  return cached.subscriptionTier;
+}
+
+function setCachedProfile(userId: string, tier: SubscriptionTier) {
+  profileCache.set(userId, {
+    subscriptionTier: tier,
+    timestamp: Date.now()
+  });
+}
+
+// Export cache invalidation for use by webhook
+export function invalidateProfileCache(userId: string) {
+  profileCache.delete(userId);
+}
+
 export async function POST(req: NextRequest) {
   try {
     // Parse request body first
@@ -46,29 +82,52 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // OPTIMIZATION: Parallelize usage check and profile fetch
-    const [usageCheck, { data: profile }] = await Promise.all([
-      checkUsageLimit(user.id),
-      supabase
-        .from('users')
-        .select('subscription_tier')
-        .eq('id', user.id)
-        .single<{ subscription_tier: Database['public']['Tables']['users']['Row']['subscription_tier'] }>()
-    ]);
+    // PHASE 2 OPTIMIZATION: Check cache first, then parallelize if needed
+    let subscriptionTier = getCachedProfile(user.id);
 
-    if (!usageCheck.canUse) {
-      return new Response(
-        JSON.stringify({
-          error: usageCheck.reason,
-          usage: usageCheck.usage,
-          limits: usageCheck.limits,
-          upgradeRequired: true,
-        }),
-        { status: 403, headers: { 'Content-Type': 'application/json' } }
-      );
+    if (subscriptionTier) {
+      // Cache hit - only check usage limits
+      const usageCheck = await checkUsageLimit(user.id);
+
+      if (!usageCheck.canUse) {
+        return new Response(
+          JSON.stringify({
+            error: usageCheck.reason,
+            usage: usageCheck.usage,
+            limits: usageCheck.limits,
+            upgradeRequired: true,
+          }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    } else {
+      // Cache miss - parallelize usage check and profile fetch
+      const [usageCheck, { data: profile }] = await Promise.all([
+        checkUsageLimit(user.id),
+        supabase
+          .from('users')
+          .select('subscription_tier')
+          .eq('id', user.id)
+          .single<{ subscription_tier: Database['public']['Tables']['users']['Row']['subscription_tier'] }>()
+      ]);
+
+      if (!usageCheck.canUse) {
+        return new Response(
+          JSON.stringify({
+            error: usageCheck.reason,
+            usage: usageCheck.usage,
+            limits: usageCheck.limits,
+            upgradeRequired: true,
+          }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      subscriptionTier = profile?.subscription_tier || 'free_trial';
+      setCachedProfile(user.id, subscriptionTier);
     }
 
-    const features = profile ? getFeatureAccess(profile.subscription_tier) : getFeatureAccess('free_trial');
+    const features = getFeatureAccess(subscriptionTier);
 
     // Step 1: Create or use existing thread
     let currentThreadId = threadId;

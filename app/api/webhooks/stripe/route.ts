@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { headers } from 'next/headers'
+import { invalidateProfileCache } from '../../chat/route'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-10-29.clover',
@@ -145,6 +146,9 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription) {
     })
     .eq('id', user.id)
 
+  // PHASE 2: Invalidate cache when subscription changes
+  invalidateProfileCache(user.id)
+
   console.log(`Subscription updated for user ${user.id}`)
 }
 
@@ -172,6 +176,9 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
       subscription_ends_at: new Date().toISOString(),
     })
     .eq('id', user.id)
+
+  // PHASE 2: Invalidate cache when subscription is deleted
+  invalidateProfileCache(user.id)
 
   console.log(`Subscription canceled for user ${user.id}`)
 }
