@@ -914,8 +914,24 @@ export default function ChatInterface() {
           </div>
         ) : (
           // Messages
-          <div className="flex-1 overflow-y-auto">
-            <div className="max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+          <div className="flex-1 overflow-y-auto relative">
+            {/* Background Watermark */}
+            <div
+              className="fixed top-1/2 left-1/2 pointer-events-none"
+              style={{
+                width: '500px',
+                height: '500px',
+                backgroundImage: 'url(/logo.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                opacity: 0.06,
+                filter: 'blur(1px)',
+                zIndex: 1,
+                transform: 'translate(-35%, -50%)'
+              }}
+            />
+            <div className="max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-8 relative z-10">
               {selectedChat.messages.map((message, index) => {
                 // Skip rendering assistant messages with no content
                 if (message.role === "assistant" && !message.content.trim()) {
@@ -925,32 +941,16 @@ export default function ChatInterface() {
                 return (
                   <div
                     key={index}
-                    className={`mb-8 ${
+                    className={`mb-6 ${
                       message.role === "user" ? "flex justify-end" : ""
                     }`}
                   >
-                    <div className={`flex gap-4 ${message.role === "user" ? "flex-row-reverse" : ""}`}>
-                      {/* Avatar */}
-                      <div className="w-8 h-8 rounded-full bg-secondary-bg flex items-center justify-center flex-shrink-0">
-                        {message.role === "user" ? (
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
-                        ) : (
-                          <div className="w-4 h-4">
-                            <img src="/logo.png" alt="AI" className="w-full h-full object-cover rounded-full" />
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Message Content */}
-                      <div className="flex-1 space-y-1">
-                        <div className="text-sm font-medium text-text-secondary">
-                          {message.role === "user" ? "You" : "TaskFixerAI"}
-                        </div>
+                    {message.role === "user" ? (
+                      // User message with bubble
+                      <div className="max-w-[85%] sm:max-w-[75%]">
                         {/* Files */}
                         {message.files && message.files.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-2">
+                          <div className="flex flex-wrap gap-2 mb-2 justify-end">
                             {message.files.map((file) => (
                               <div
                                 key={file.id}
@@ -964,15 +964,18 @@ export default function ChatInterface() {
                             ))}
                           </div>
                         )}
-                        <div className="text-[15px] leading-relaxed">
-                          {message.role === "assistant" ? (
-                            <MessageContent content={message.content} />
-                          ) : (
-                            message.content
-                          )}
+                        <div className="bg-brand-purple text-white px-4 py-3 rounded-2xl text-[15px] leading-relaxed">
+                          {message.content}
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      // AI message without bubble
+                      <div className="max-w-[95%]">
+                        <div className="text-[15px] leading-relaxed">
+                          <MessageContent content={message.content} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -1034,20 +1037,12 @@ export default function ChatInterface() {
               )}
 
               {isLoading && (
-                <div className="mb-8">
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full bg-secondary-bg flex items-center justify-center flex-shrink-0">
-                      <div className="w-4 h-4">
-                        <img src="/logo.png" alt="AI" className="w-full h-full object-cover rounded-full" />
-                      </div>
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <div className="text-sm font-medium text-text-secondary">TaskFixerAI</div>
-                      <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                      </div>
+                <div className="mb-6">
+                  <div className="max-w-[95%]">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                      <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                     </div>
                   </div>
                 </div>
