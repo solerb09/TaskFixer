@@ -230,7 +230,11 @@ export default function ChatInterface() {
 
     const lowerContent = content.toLowerCase();
 
-    // Check for assignment-related headers/keywords (more flexible)
+    // Must be substantial content (increased threshold to avoid premature detection)
+    const isLongEnough = content.length > 1200;
+    if (!isLongEnough) return false;
+
+    // Check for assignment-related headers/keywords
     const hasAssignmentIndicators =
       content.includes('# ') || // Has markdown headers
       lowerContent.includes('assignment') ||
@@ -239,42 +243,32 @@ export default function ChatInterface() {
       lowerContent.includes('project idea') ||
       lowerContent.includes('redesign');
 
-    // Check for completion/conclusion markers (more comprehensive)
-    const completionMarkers = [
-      'here is',
-      'here\'s',
-      'redesigned',
-      'completed',
-      'ready for',
-      'assignment for',
-      'updated assignment',
-      'revised assignment',
-      'let\'s create',
-      'i\'ve created',
-      'i\'ve redesigned',
-      'i\'ve updated',
-      'i\'ve added',
-      'i\'ve enhanced',
-      'i\'ve revised',
-      'i\'ve modified',
-      'created a project',
-      'created an assignment',
-      'updated the assignment',
-      'revised the assignment',
-      'complete revised version',
-      'complete updated version',
-      'here\'s the complete'
+    if (!hasAssignmentIndicators) return false;
+
+    // Look for END-OF-RESPONSE indicators (not beginning phrases)
+    // These suggest the response is wrapping up, not just starting
+    const endMarkers = [
+      'let me know if',
+      'feel free to',
+      'would you like',
+      'if you need',
+      'hope this helps',
+      'good luck',
+      'please let me know',
+      'any questions',
+      'is there anything',
+      'would you like me to',
     ];
 
-    const hasCompletionMarker = completionMarkers.some(marker =>
+    const hasEndMarker = endMarkers.some(marker =>
       lowerContent.includes(marker)
     );
 
-    const isLongEnough = content.length > 500;
+    // Check for structural completeness (has both header sections and conclusion-like text)
+    const hasMultipleSections = (content.match(/#{1,3}\s/g) || []).length >= 3;
 
-    // Must have both: assignment indicators AND completion markers
-    // Plus a reasonable length (suggests a full redesign, not just a question)
-    return hasAssignmentIndicators && hasCompletionMarker && isLongEnough;
+    // Response should have end markers OR multiple sections to be considered complete
+    return hasAssignmentIndicators && (hasEndMarker || hasMultipleSections);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
