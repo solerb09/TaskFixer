@@ -1,12 +1,4 @@
-'use client';
-
 const Hero = () => {
-  const scrollToUpload = () => {
-    document.getElementById('how-it-works')?.scrollIntoView({
-      behavior: 'smooth',
-    });
-  };
-
   return (
     <section className="relative min-h-0 flex items-center pt-0 overflow-hidden z-[1] w-full">
       {/* Full width background container */}
@@ -57,15 +49,14 @@ const Hero = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-3 pt-3 sm:pt-2 justify-center px-2 sm:px-0">
-              <button
-                onClick={scrollToUpload}
-                style={{
-                  backgroundColor: '#8E5AE9',
-                }}
-                className="hover:bg-[#9B6EF0] text-white font-bold text-sm sm:text-base h-[48px] sm:h-[44px] px-6 rounded-[10px] transition-all duration-300 uppercase"
+              <a
+                href="https://www.youtube.com/watch?v=IfVU-uHJap0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border-2 border-white bg-transparent hover:bg-white/10 text-white font-bold text-sm sm:text-base h-[48px] sm:h-[44px] px-6 rounded-[10px] transition-all duration-300 uppercase flex items-center justify-center"
               >
-                Try TaskFixerAI Free →
-              </button>
+                Learn More →
+              </a>
 
               <a
                 href="/TaskFixerAI-Teacher-Guide.pdf"
@@ -81,20 +72,15 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Column: YouTube Video */}
+          {/* Right Column: Hero Image */}
           <div
-            className="relative h-[280px] sm:h-[350px] md:h-[500px] lg:h-[580px] order-2 flex items-center justify-center lg:justify-end px-4 sm:px-4 lg:px-6"
+            className="relative h-[300px] sm:h-[320px] md:h-[440px] lg:h-[520px] order-2 flex items-start sm:items-center justify-center lg:justify-end px-0 sm:px-4 lg:px-6"
           >
-            <div className="w-full aspect-video">
-              <iframe
-                className="w-full h-full rounded-xl shadow-2xl"
-                src="https://www.youtube.com/embed/IfVU-uHJap0?si=cbNsIb3AmJ3hjUYE"
-                title="TaskFixerAI Demo"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
+            <img
+              src="/hero-classroom.png"
+              alt="TaskFixerAI in the Classroom"
+              className="w-[140%] sm:w-full h-auto sm:h-full object-contain max-h-[320px] sm:max-h-none -mt-10 sm:mt-0"
+            />
           </div>
         </div>
       </div>

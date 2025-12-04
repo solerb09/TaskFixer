@@ -1,6 +1,7 @@
 'use client';
 
 import { FileText, Lightbulb, Laptop } from 'lucide-react';
+import Link from 'next/link'
 
 const ComparisonTable = () => {
   const scrollToHowItWorks = () => {
@@ -118,13 +119,13 @@ const ComparisonTable = () => {
           </p>
         </div>
 
-        <div className="text-center mt-6 sm:mt-8">
-          <button
-            onClick={scrollToHowItWorks}
-            className="bg-gradient-to-r from-[#A855F7] via-[#F97316] to-[#FBBF24] text-white font-bold text-sm sm:text-base md:text-lg px-6 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
+        <div className="text-center mt-8 sm:mt-10">
+          <Link
+            href="/auth/signup?redirect=%2Fchat"
+            className="inline-block bg-gradient-to-r from-[#A855F7] via-[#F97316] to-[#FBBF24] text-white font-bold text-sm sm:text-base md:text-lg px-6 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-[10px] hover:shadow-lg transition-all duration-300 uppercase"
           >
             Upload Your Assignment →
-          </button>
+          </Link>
         </div>
       </div>
     </section>
