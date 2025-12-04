@@ -868,7 +868,7 @@ export default function ChatInterface() {
           // Empty State - Show when no chat is selected or selected chat has no messages
           <div className="flex-1 flex items-start sm:items-center justify-center overflow-y-auto px-4 pt-12 sm:pt-0">
             <div className="text-center max-w-2xl py-4 sm:py-8">
-              <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-6 bg-white rounded-2xl p-2.5 sm:p-4">
+              <div className="w-20 h-20 sm:w-28 sm:h-28 mx-auto mb-3 sm:mb-6">
                 <img src="/logo.png" alt="TaskFixerAI" className="w-full h-full object-cover" />
               </div>
               <h1 className="text-xl sm:text-3xl font-semibold mb-2 sm:mb-4">TaskFixer AI</h1>
@@ -909,22 +909,6 @@ export default function ChatInterface() {
         ) : (
           // Messages
           <div className="flex-1 overflow-y-auto relative">
-            {/* Background Watermark */}
-            <div
-              className="fixed top-1/2 left-1/2 pointer-events-none"
-              style={{
-                width: '500px',
-                height: '500px',
-                backgroundImage: 'url(/logo.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                opacity: 0.06,
-                filter: 'blur(1px)',
-                zIndex: 1,
-                transform: 'translate(-35%, -50%)'
-              }}
-            />
             <div className="max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-8 relative z-10">
               {selectedChat.messages.map((message, index) => {
                 // Skip rendering assistant messages with no content
